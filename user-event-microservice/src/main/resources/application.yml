@@ -1,7 +1,26 @@
 micronaut:
   application:
     name: userEventMicroservice
+datasources:
+  default:
+    driver-class-name: org.mariadb.jdbc.Driver
+    db-type: mariadb
+    dialect: MYSQL
+    url: jdbc:mariadb://localhost:3306/events
+    username: event
+    password: eventsecret
 netty:
   default:
     allocator:
       max-order: 3
+jpa:
+  default:
+    entity-scan:
+      packages:
+        - com.events.management.userevents.domain
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+kafka:
+  enabled: false
