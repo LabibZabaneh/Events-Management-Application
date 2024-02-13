@@ -17,7 +17,7 @@ jpa:
   default:
     entity-scan:
       packages:
-        - com.events.management.userevents.domain
+        - com.events.management.events.domain
     properties:
       hibernate:
         hbm2ddl:

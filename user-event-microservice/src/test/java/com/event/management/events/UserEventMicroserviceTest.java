@@ -1,4 +1,4 @@
-package com.event.management.userevents;
+package com.event.management.events;
 
 import io.micronaut.runtime.EmbeddedApplication;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;

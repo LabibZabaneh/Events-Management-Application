@@ -1,4 +1,4 @@
-package com.event.management.userevents.domain;
+package com.event.management.events.domain;
 
 import io.micronaut.serde.annotation.Serdeable;
 
@@ -16,10 +16,10 @@ public class Event {
     private Long id;
 
     @Column(nullable = false)
-    private String entityName;
+    private String eventName;
 
     @Column(nullable = false)
-    private String name;
+    private String entityName;
 
     @Column(nullable = false)
     private String venue;
@@ -46,12 +46,12 @@ public class Event {
         this.entityName = entityName;
     }
 
-    public String getName() {
-        return name;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEventName(String name) {
+        this.eventName = name;
     }
 
     public String getVenue() {
@@ -68,6 +68,14 @@ public class Event {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
 }
