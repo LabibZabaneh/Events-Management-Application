@@ -1,10 +1,8 @@
 package com.event.management.events.controllers;
 
-import com.event.management.events.domain.Event;
 import com.event.management.events.domain.User;
 import com.event.management.events.dto.UserDTO;
 import com.event.management.events.repositories.UsersRepository;
-import io.micronaut.data.annotation.Repository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;

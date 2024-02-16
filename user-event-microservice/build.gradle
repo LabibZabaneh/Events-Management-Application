@@ -4,7 +4,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.event.management.userevents"
+group = "com.event.management.events"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ dependencies {
 
 
 application {
-    mainClass.set("com.event.management.userevents.Application")
+    mainClass.set("com.event.management.events.Application")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
@@ -40,7 +40,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.event.management.userevents.*")
+        annotations("com.event.management.events.*")
     }
 }
 
