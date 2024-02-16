@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: userEventMicroservice
+    name: EventMicroservice
 datasources:
   default:
     driver-class-name: org.mariadb.jdbc.Driver
@@ -17,7 +17,7 @@ jpa:
   default:
     entity-scan:
       packages:
-        - com.events.management.events.domain
+        - com.event.management.events.domain
     properties:
       hibernate:
         hbm2ddl:
