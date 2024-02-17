@@ -1,0 +1,10 @@
+# .gitignore for Java projects
+
+# Ignore IDE-specific files and directories
+.idea/
+*.iml
+*.ipr
+*.iws
+*.classpath
+*.project
+*.settings/
