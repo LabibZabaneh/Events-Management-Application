@@ -47,3 +47,4 @@ This Events Management application is designed to facilitate the creation, manag
 ## Acknowledgments
 
 - The Event Microservice is currently implemented; however, other microservices are yet to be built
+- Every microservice will have a corresponding command line client under the clients folder mainly for testing purposes only
