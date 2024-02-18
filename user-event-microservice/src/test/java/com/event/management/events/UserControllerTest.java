@@ -75,7 +75,18 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK, resp.getStatus(), "Update should be successful");
 
         User repoUser = repo.findById(u.getId()).get();
+        compareUsers(repoUser, dto);
+    }
 
+    @Test
+    public void deleteUser(){
+        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", "20/03/2005");
+        repo.save(u);
+
+        HttpResponse<Void> resp = client.deleteUser(u.getId());
+        assertEquals(HttpStatus.OK, resp.getStatus(), "Deletion should be successful");
+
+        assertFalse(repo.existsById(u.getId()));
     }
 
     private void compareUsers(User u1, User u2){
