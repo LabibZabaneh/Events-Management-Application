@@ -38,17 +38,12 @@ public class UserControllerTest {
 
     @Test
     public void addUser(){
-        UserDTO dto = new UserDTO();
-        dto.setFirstName("Smith");
-        dto.setLastName("Dan");
-        dto.setEmail("smith.dan@example.com");
-        dto.setMobileNumber("+44 0000000000");
-        dto.setDateOfBirth("20/03/2005");
+        UserDTO dto = createUserDTO("Joe", "Doe", "joe.doe@example.com", "+44 1111111111", "15/11/2004");
 
         HttpResponse<Void> resp = client.addUser(dto);
         assertEquals(HttpStatus.CREATED, resp.getStatus(), "Creation should be successful");
 
-        List<User> users = iterableToList(client.list());
+        List<User> users = iterableToList(repo.findAll());
         assertEquals(1, users.size(), "There should only be one total user");
 
         User u = users.get(0);
@@ -125,7 +120,7 @@ public class UserControllerTest {
         return u;
     }
 
-    private <T> List<T> iterableToList(Iterable<T> iterable) {
+    protected static <T> List<T> iterableToList(Iterable<T> iterable) {
         List<T> l = new ArrayList<>();
         iterable.forEach(l::add);
         return l;
