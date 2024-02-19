@@ -1,23 +1,16 @@
 package com.event.management.events.dto;
 
+import com.event.management.events.domain.Business;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
 public class EventDTO {
 
     private String eventName;
-    private String entityName;
+    private Long businessId;
     private String venue;
     private String date;
     private String time;
-
-    public String getEntityName() {
-        return entityName;
-    }
-
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
 
     public String getEventName() {
         return eventName;
@@ -25,6 +18,14 @@ public class EventDTO {
 
     public void setEventName(String name) {
         this.eventName = name;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
     public String getVenue() {

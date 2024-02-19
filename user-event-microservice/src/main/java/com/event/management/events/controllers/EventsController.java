@@ -1,7 +1,9 @@
 package com.event.management.events.controllers;
 
+import com.event.management.events.domain.Business;
 import com.event.management.events.domain.Event;
 import com.event.management.events.dto.EventDTO;
+import com.event.management.events.repositories.BusinessRepository;
 import com.event.management.events.repositories.EventsRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -17,16 +19,25 @@ public class EventsController {
     @Inject
     EventsRepository repo;
 
+    @Inject
+    BusinessRepository businessRepo;
+
     @Get("/")
     public Iterable<Event> list() {
         return repo.findAll();
     }
 
+    @Transactional
     @Post("/")
     public HttpResponse<Void> addEvent(@Body EventDTO dto) {
+        Optional<Business> oBusiness = businessRepo.findById(dto.getBusinessId());
+        if (oBusiness.isEmpty()){
+            return HttpResponse.notFound();
+        }
+        Business b = oBusiness.get();
         Event e = new Event();
         e.setEventName(dto.getEventName());
-        e.setEntityName(dto.getEntityName());
+        e.setBusiness(b);
         e.setDate(dto.getDate());
         e.setTime(dto.getTime());
         e.setVenue(dto.getVenue());
