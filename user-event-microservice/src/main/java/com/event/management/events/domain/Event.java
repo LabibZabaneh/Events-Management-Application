@@ -2,10 +2,7 @@ package com.event.management.events.domain;
 
 import io.micronaut.serde.annotation.Serdeable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Serdeable
 @Entity
@@ -18,8 +15,8 @@ public class Event {
     @Column(nullable = false)
     private String eventName;
 
-    @Column(nullable = false)
-    private String entityName;
+    @ManyToOne
+    private Business business;
 
     @Column(nullable = false)
     private String venue;
@@ -38,12 +35,12 @@ public class Event {
         this.id = id;
     }
 
-    public String getEntityName() {
-        return entityName;
+    public Business getBusiness() {
+        return business;
     }
 
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
+    public void setBusiness(Business business) {
+        this.business = business;
     }
 
     public String getEventName() {
