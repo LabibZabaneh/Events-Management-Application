@@ -42,6 +42,14 @@ public class EventsControllerTest {
     }
 
     @Test
+    public void addEventWithInvalidBusiness(){
+        EventDTO dto = createEventDTO("Halloween", 0L, "Club Salvation", "31/10/2024", "23:00");
+
+        HttpResponse<Void> resp = client.addEvent(dto);
+        assertEquals(HttpStatus.NOT_FOUND, resp.getStatus(), "Creation should not be successful");
+    }
+
+    @Test
     public void addEvent(){
         Business b = createBusiness();
         businessRepo.save(b);
