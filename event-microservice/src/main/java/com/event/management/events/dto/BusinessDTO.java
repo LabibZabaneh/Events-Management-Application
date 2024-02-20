@@ -11,7 +11,6 @@ public class BusinessDTO {
 
     private String name;
     private String email;
-    private Set<Event> postedEvents;
 
     public String getName() {
         return name;
@@ -29,11 +28,4 @@ public class BusinessDTO {
         this.email = email;
     }
 
-    public Set<Event> getPostedEvents() {
-        return postedEvents;
-    }
-
-    public void setPostedEvents(Set<Event> postedEvents) {
-        this.postedEvents = postedEvents;
-    }
 }
