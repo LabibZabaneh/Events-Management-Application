@@ -1,4 +1,4 @@
-package com.event.management.events;
+package com.event.management.events.clients;
 
 import com.event.management.events.domain.Business;
 import com.event.management.events.dto.BusinessDTO;
@@ -6,7 +6,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
 
-@Client("${business.url:`http://localhost:8080/business`}")
+@Client("/business")
 public interface BusinessClient {
 
     @Get("/")

@@ -1,5 +1,6 @@
 package com.event.management.events;
 
+import com.event.management.events.clients.BusinessClient;
 import com.event.management.events.domain.Business;
 import com.event.management.events.dto.BusinessDTO;
 import com.event.management.events.repositories.BusinessRepository;

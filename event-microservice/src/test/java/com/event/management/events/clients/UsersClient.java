@@ -1,4 +1,4 @@
-package com.event.management.events;
+package com.event.management.events.clients;
 
 import com.event.management.events.domain.User;
 import com.event.management.events.dto.UserDTO;
@@ -6,7 +6,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
 
-@Client("${users.url:`http://localhost:8080/users`}")
+@Client("/users")
 public interface UsersClient {
 
     @Get("/")

@@ -16,6 +16,7 @@ public class Event {
     private String eventName;
 
     @ManyToOne
+    @JoinColumn(name="business_id", nullable = false)
     private Business business;
 
     @Column(nullable = false)

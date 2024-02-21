@@ -1,5 +1,6 @@
 package com.event.management.events;
 
+import com.event.management.events.clients.EventsClient;
 import com.event.management.events.domain.Business;
 import com.event.management.events.domain.Event;
 import com.event.management.events.dto.EventDTO;
@@ -33,6 +34,7 @@ public class EventsControllerTest {
     @BeforeEach
     public void clean(){
         repo.deleteAll();
+        businessRepo.deleteAll();
     }
 
     @Test
@@ -85,7 +87,7 @@ public class EventsControllerTest {
         Event e = createEvent("Halloween", b, "Club Salvation", "31/10/2024", "23:00");
         repo.save(e);
 
-        EventDTO dto = createEventDTO("Freshers", null, "Revs", "25/09/2022", "12:00");
+        EventDTO dto = createEventDTO("Freshers", b.getId(), "Revs", "25/09/2022", "12:00");
         HttpResponse<Void> resp = client.updateEvent(e.getId(), dto);
         assertEquals(HttpStatus.OK, resp.getStatus(), "Update should be successful");
 

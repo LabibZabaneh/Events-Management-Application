@@ -1,5 +1,6 @@
 package com.event.management.events;
 
+import com.event.management.events.clients.UsersClient;
 import com.event.management.events.domain.User;
 import com.event.management.events.dto.UserDTO;
 import com.event.management.events.repositories.UsersRepository;
