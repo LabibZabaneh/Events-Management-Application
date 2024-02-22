@@ -2,13 +2,14 @@
 
 ## Overview
 
-This Events Management application is designed to facilitate the creation, management, and analysis of events. The application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance.
+This Events Management application is designed to facilitate the creation, management, and analysis of events. The application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance. The application is fully hosted on docker containers.
 
 ## Technologies Used
 
 - **Microservices Framework:** [Micronaut](https://micronaut.io/)
 - **Messaging System:** [Apache Kafka](https://kafka.apache.org/)
 - **Containerization:** [Docker](https://www.docker.com/)
+- **Database:** [Mariadb](https://mariadb.org/)
 
 ## Microservices
 
