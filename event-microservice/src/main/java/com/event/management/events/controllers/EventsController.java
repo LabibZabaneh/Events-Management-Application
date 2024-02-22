@@ -3,6 +3,7 @@ package com.event.management.events.controllers;
 import com.event.management.events.domain.Business;
 import com.event.management.events.domain.Event;
 import com.event.management.events.dto.EventDTO;
+import com.event.management.events.kafka.EventsProducer;
 import com.event.management.events.repositories.BusinessRepository;
 import com.event.management.events.repositories.EventsRepository;
 import io.micronaut.http.HttpResponse;
@@ -21,6 +22,9 @@ public class EventsController {
 
     @Inject
     BusinessRepository businessRepo;
+
+    @Inject
+    EventsProducer producer;
 
     @Get("/")
     public Iterable<Event> list() {
@@ -42,6 +46,8 @@ public class EventsController {
         e.setTime(dto.getTime());
         e.setVenue(dto.getVenue());
         repo.save(e);
+
+        producer.postedEvent(e.getId(), dto);
 
         return HttpResponse.created(URI.create("/events/" + e.getId()));
     }
@@ -82,7 +88,17 @@ public class EventsController {
         if (oEvent.isEmpty()) {
             return HttpResponse.notFound();
         }
-        repo.delete(oEvent.get());
+        Event e = oEvent.get();
+        repo.delete(e);
+
+        EventDTO dto = new EventDTO();
+        dto.setTime(e.getTime());
+        dto.setDate(e.getDate());
+        dto.setEventName(e.getEventName());
+        dto.setVenue(e.getVenue());
+        dto.setBusinessId(e.getBusiness().getId());
+        producer.deletedEvent(id, dto);
+
         return HttpResponse.ok();
     }
 }

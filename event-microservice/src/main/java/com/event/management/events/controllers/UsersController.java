@@ -2,6 +2,7 @@ package com.event.management.events.controllers;
 
 import com.event.management.events.domain.User;
 import com.event.management.events.dto.UserDTO;
+import com.event.management.events.kafka.UsersProducer;
 import com.event.management.events.repositories.UsersRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -17,6 +18,9 @@ public class UsersController {
     @Inject
     UsersRepository repo;
 
+    @Inject
+    UsersProducer producer;
+
     @Get("/")
     public Iterable<User> list() {
         return repo.findAll();
@@ -31,6 +35,8 @@ public class UsersController {
         u.setDateOfBirth(dto.getDateOfBirth());
         u.setMobileNumber(dto.getMobileNumber());
         repo.save(u);
+
+        producer.createdUser(u.getId(), dto);
 
         return HttpResponse.created(URI.create("/users/" + u.getId()));
     }
@@ -59,7 +65,17 @@ public class UsersController {
         if (oUser.isEmpty()){
             return HttpResponse.notFound();
         }
-        repo.delete(oUser.get());
+        User u = oUser.get();
+        repo.delete(u);
+
+        UserDTO dto = new UserDTO();
+        dto.setFirstName(u.getFirstName());
+        dto.setLastName(u.getLastName());
+        dto.setEmail(u.getEmail());
+        dto.setDateOfBirth(u.getDateOfBirth());
+        dto.setMobileNumber(u.getMobileNumber());
+        producer.deletedUser(id, dto);
+
         return HttpResponse.ok();
     }
 
