@@ -3,6 +3,9 @@ micronaut:
     name: registrationMicroservice
 datasources:
   default:
+    url: jdbc:mariadb://localhost:3307/registrations
+    username: registration
+    password: registrationsecret
     driver-class-name: org.mariadb.jdbc.Driver
     db-type: mariadb
     dialect: MYSQL
@@ -12,6 +15,9 @@ netty:
       max-order: 3
 jpa:
   default:
+    entity-scan:
+      packages:
+        - com.event.management.registrations.domain
     properties:
       hibernate:
         hbm2ddl:
