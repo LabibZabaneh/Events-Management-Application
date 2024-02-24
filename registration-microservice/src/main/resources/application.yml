@@ -22,3 +22,5 @@ jpa:
       hibernate:
         hbm2ddl:
           auto: update
+kafka:
+  enabled: false

@@ -1,4 +1,4 @@
-package com.event.management.registration;
+package com.event.management.registrations;
 
 import io.micronaut.runtime.EmbeddedApplication;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
