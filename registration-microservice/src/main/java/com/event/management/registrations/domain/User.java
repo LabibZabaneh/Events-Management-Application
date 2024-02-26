@@ -1,5 +1,7 @@
 package com.event.management.registrations.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,8 +20,13 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "registeredUsers")
     private Set<Event> registeredEvents;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "followers")
+    private Set<Business> followedBusinesses;
 
     public Long getId() {
         return id;
