@@ -32,6 +32,10 @@ public class User {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -46,5 +50,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Event> getRegisteredEvents() {
+        return registeredEvents;
+    }
+
+    public void setRegisteredEvents(Set<Event> registeredEvents) {
+        this.registeredEvents = registeredEvents;
+    }
+
+    public Set<Business> getFollowedBusinesses() {
+        return followedBusinesses;
+    }
+
+    public void setFollowedBusinesses(Set<Business> followedBusinesses) {
+        this.followedBusinesses = followedBusinesses;
     }
 }
