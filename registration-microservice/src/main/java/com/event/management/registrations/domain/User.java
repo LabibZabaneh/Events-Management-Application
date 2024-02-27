@@ -26,7 +26,7 @@ public class User {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "followers")
-    private Set<Business> followedBusinesses;
+    private Set<Organizer> followedOrganizers;
 
     public Long getId() {
         return id;
@@ -60,11 +60,11 @@ public class User {
         this.registeredEvents = registeredEvents;
     }
 
-    public Set<Business> getFollowedBusinesses() {
-        return followedBusinesses;
+    public Set<Organizer> getFollowedOrganizers() {
+        return followedOrganizers;
     }
 
-    public void setFollowedBusinesses(Set<Business> followedBusinesses) {
-        this.followedBusinesses = followedBusinesses;
+    public void setFollowedOrganizers(Set<Organizer> followedOrganizers) {
+        this.followedOrganizers = followedOrganizers;
     }
 }

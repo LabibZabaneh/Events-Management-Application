@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Serdeable
 @Entity
-public class Business {
+public class Organizer {
 
     @Id
     private Long id;

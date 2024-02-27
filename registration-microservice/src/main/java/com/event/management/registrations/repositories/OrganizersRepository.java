@@ -1,9 +1,9 @@
 package com.event.management.registrations.repositories;
 
-import com.event.management.registrations.domain.Business;
+import com.event.management.registrations.domain.Organizer;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
 
 @Repository
-public interface BusinessRepository extends CrudRepository<Business, Long> {
+public interface OrganizersRepository extends CrudRepository<Organizer, Long> {
 }
