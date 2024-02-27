@@ -25,12 +25,12 @@ public class RegistrationController {
     EventsRepository eventsRepo;
 
     @Get("/users")
-    public Iterable<User> listUsers(){
+    public Iterable<User> getUsers(){
         return usersRepo.findAll();
     }
 
     @Get("/events")
-    public Iterable<Event> listEvents(){
+    public Iterable<Event> getEvents(){
         return eventsRepo.findAll();
     }
 
