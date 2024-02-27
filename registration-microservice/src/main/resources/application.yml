@@ -1,4 +1,5 @@
 micronaut:
+  server: 8081
   application:
     name: registrationMicroservice
 datasources:
