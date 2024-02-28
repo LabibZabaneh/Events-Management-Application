@@ -10,17 +10,17 @@ import io.micronaut.http.client.annotation.Client;
 public interface EventsClient {
 
     @Get("/")
-    public Iterable<Event> list();
+    Iterable<Event> list();
 
     @Post("/")
-    public HttpResponse<Void> addEvent(@Body EventDTO dto);
+    HttpResponse<Void> addEvent(@Body EventDTO dto);
 
     @Get("/{id}")
-    public Event getEvent(long id);
+    Event getEvent(long id);
 
     @Put("/{id}")
-    public HttpResponse<Void> updateEvent(long id, @Body EventDTO dto);
+    HttpResponse<Void> updateEvent(long id, @Body EventDTO dto);
 
     @Delete("/{id}")
-    public HttpResponse<Void> deleteEvent(long id);
+    HttpResponse<Void> deleteEvent(long id);
 }

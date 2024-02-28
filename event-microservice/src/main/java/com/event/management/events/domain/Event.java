@@ -16,8 +16,8 @@ public class Event {
     private String eventName;
 
     @ManyToOne
-    @JoinColumn(name="business_id", nullable = false)
-    private Business business;
+    @JoinColumn(name="organizer_id", nullable = false)
+    private Organizer organizer;
 
     @Column(nullable = false)
     private String venue;
@@ -36,12 +36,12 @@ public class Event {
         this.id = id;
     }
 
-    public Business getBusiness() {
-        return business;
+    public Organizer getOrganizer() {
+        return organizer;
     }
 
-    public void setBusiness(Business business) {
-        this.business = business;
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
     }
 
     public String getEventName() {

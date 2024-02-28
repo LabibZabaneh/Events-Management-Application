@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Serdeable
 @Entity
-public class Business {
+public class Organizer {
 
     @GeneratedValue
     @Id

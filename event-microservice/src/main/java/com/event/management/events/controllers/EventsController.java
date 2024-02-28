@@ -1,11 +1,11 @@
 package com.event.management.events.controllers;
 
-import com.event.management.events.domain.Business;
 import com.event.management.events.domain.Event;
+import com.event.management.events.domain.Organizer;
 import com.event.management.events.dto.EventDTO;
 import com.event.management.events.kafka.EventsProducer;
-import com.event.management.events.repositories.BusinessRepository;
 import com.event.management.events.repositories.EventsRepository;
+import com.event.management.events.repositories.OrganizersRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
@@ -21,7 +21,7 @@ public class EventsController {
     EventsRepository repo;
 
     @Inject
-    BusinessRepository businessRepo;
+    OrganizersRepository organizersRepo;
 
     @Inject
     EventsProducer producer;
@@ -34,14 +34,14 @@ public class EventsController {
     @Transactional
     @Post("/")
     public HttpResponse<Void> addEvent(@Body EventDTO dto) {
-        Optional<Business> oBusiness = businessRepo.findById(dto.getBusinessId());
-        if (oBusiness.isEmpty()){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(dto.getOrganizerId());
+        if (oOrganizer.isEmpty()){
             return HttpResponse.notFound();
         }
-        Business b = oBusiness.get();
+        Organizer o = oOrganizer.get();
         Event e = new Event();
         e.setEventName(dto.getEventName());
-        e.setBusiness(b);
+        e.setOrganizer(o);
         e.setDate(dto.getDate());
         e.setTime(dto.getTime());
         e.setVenue(dto.getVenue());
@@ -96,7 +96,7 @@ public class EventsController {
         dto.setDate(e.getDate());
         dto.setEventName(e.getEventName());
         dto.setVenue(e.getVenue());
-        dto.setBusinessId(e.getBusiness().getId());
+        dto.setOrganizerId(e.getOrganizer().getId());
         producer.deletedEvent(id, dto);
 
         return HttpResponse.ok();

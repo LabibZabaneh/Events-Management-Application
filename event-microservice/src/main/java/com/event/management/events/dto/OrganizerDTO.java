@@ -7,7 +7,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import java.util.Set;
 
 @Serdeable
-public class BusinessDTO {
+public class OrganizerDTO {
 
     private String name;
     private String email;

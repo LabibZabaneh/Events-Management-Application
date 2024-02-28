@@ -1,13 +1,12 @@
 package com.event.management.events.dto;
 
-import com.event.management.events.domain.Business;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
 public class EventDTO {
 
     private String eventName;
-    private Long businessId;
+    private Long organizerId;
     private String venue;
     private String date;
     private String time;
@@ -20,12 +19,12 @@ public class EventDTO {
         this.eventName = name;
     }
 
-    public Long getBusinessId() {
-        return businessId;
+    public Long getOrganizerId() {
+        return organizerId;
     }
 
-    public void setBusinessId(Long businessId) {
-        this.businessId = businessId;
+    public void setOrganizerId(Long organizerId) {
+        this.organizerId = organizerId;
     }
 
     public String getVenue() {
