@@ -2,6 +2,7 @@ package com.event.management.registrations.controllers;
 
 import com.event.management.registrations.domain.Event;
 import com.event.management.registrations.domain.User;
+import com.event.management.registrations.kafka.producers.RegistrationProducer;
 import com.event.management.registrations.repositories.EventsRepository;
 import com.event.management.registrations.repositories.UsersRepository;
 import io.micronaut.http.HttpResponse;
@@ -23,6 +24,9 @@ public class RegistrationController {
 
     @Inject
     EventsRepository eventsRepo;
+
+    @Inject
+    RegistrationProducer producer;
 
     @Get("/users")
     public Iterable<User> getUsers(){
@@ -62,6 +66,8 @@ public class RegistrationController {
         eventsRepo.update(e);
         usersRepo.update(u);
 
+        producer.registeredUser(userId, eventId);
+
         return HttpResponse.ok();
     }
 
@@ -76,8 +82,10 @@ public class RegistrationController {
 
         Event event = oEvent.get();
         User user = oUser.get();
-        event.getRegisteredUsers().removeIf(u -> userId == u.getId());
-        user.getRegisteredEvents().removeIf(e -> eventId == e.getId());
+
+        if (event.getRegisteredUsers().removeIf(u -> userId == u.getId()) && user.getRegisteredEvents().removeIf(e -> eventId == e.getId())){
+            producer.unregisteredUser(userId, eventId);
+        }
 
         eventsRepo.update(event);
         usersRepo.update(user);
