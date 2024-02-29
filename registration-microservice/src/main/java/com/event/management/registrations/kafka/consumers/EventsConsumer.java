@@ -1,4 +1,4 @@
-package com.event.management.registrations.kafka;
+package com.event.management.registrations.kafka.consumers;
 
 import com.event.management.registrations.domain.Event;
 import com.event.management.registrations.dto.EventDTO;

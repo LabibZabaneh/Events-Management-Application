@@ -2,6 +2,7 @@ package com.event.management.registrations.controllers;
 
 import com.event.management.registrations.domain.Organizer;
 import com.event.management.registrations.domain.User;
+import com.event.management.registrations.kafka.producers.FollowingProducer;
 import com.event.management.registrations.repositories.OrganizersRepository;
 import com.event.management.registrations.repositories.UsersRepository;
 import io.micronaut.http.HttpResponse;
@@ -22,6 +23,9 @@ public class FollowingController {
 
     @Inject
     OrganizersRepository organizersRepo;
+
+    @Inject
+    FollowingProducer producer;
 
     @Get("/organizers")
     public Iterable<Organizer> getOrganizers(){
@@ -60,6 +64,8 @@ public class FollowingController {
         usersRepo.update(user);
         organizersRepo.update(organizer);
 
+        producer.followedOrganizer(organizerId, userId);
+
         return HttpResponse.ok();
     }
 
@@ -73,8 +79,10 @@ public class FollowingController {
         }
         Organizer organizer = oOrganizer.get();
         User user = oUser.get();
-        organizer.getFollowers().removeIf(u -> userId == u.getId());
-        user.getFollowedOrganizers().removeIf(o -> organizerId == o.getId());
+
+        if (organizer.getFollowers().removeIf(u -> userId == u.getId()) && user.getFollowedOrganizers().removeIf(o -> organizerId == o.getId())){
+            producer.unfollowedOrganizer(organizerId, userId);
+        }
 
         usersRepo.update(user);
         organizersRepo.update(organizer);
