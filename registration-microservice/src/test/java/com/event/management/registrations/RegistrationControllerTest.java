@@ -71,7 +71,7 @@ public class RegistrationControllerTest {
     }
 
 
-    private User createUser(){
+    protected static User createUser(){
         User user = new User();
         user.setId(1L);
         user.setFirstName("Doe");
@@ -92,7 +92,7 @@ public class RegistrationControllerTest {
         return event;
     }
 
-    private <T> List<T> iterableToList(Iterable<T> iterable) {
+    protected static <T> List<T> iterableToList(Iterable<T> iterable) {
         List<T> l = new ArrayList<>();
         iterable.forEach(l::add);
         return l;
