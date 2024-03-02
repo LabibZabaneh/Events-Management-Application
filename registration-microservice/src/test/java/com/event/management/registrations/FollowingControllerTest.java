@@ -74,7 +74,7 @@ public class FollowingControllerTest {
     }
 
     @Test
-    public void getInvalids(){
+    public void getFollowersWithInvalidIds(){
         assertNull(client.getOrganizerFollowers(0), "Should return null on an Invalid organizer id");
         assertNull(client.getUserFollowing(0), "Should return null on an Invalid organizer id");
     }
@@ -130,6 +130,4 @@ public class FollowingControllerTest {
         organizer.setFollowers(new HashSet<>());
         return organizer;
     }
-
-
 }
