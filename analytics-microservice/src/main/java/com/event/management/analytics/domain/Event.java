@@ -15,10 +15,7 @@ public class Event {
     private String name;
 
     @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
-    private String time;
+    private int registrations;
 
     public Long getId() {
         return id;
@@ -36,19 +33,21 @@ public class Event {
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public int getRegistrations() {
+        return registrations;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setRegistrations(int registrations){
+        this.registrations = registrations;
     }
 
-    public String getTime() {
-        return time;
+    public void addRegistration(){
+        this.registrations += 1;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void deleteRegistration(){
+        if (this.registrations > 0){
+            this.registrations -= 1;
+        }
     }
 }
