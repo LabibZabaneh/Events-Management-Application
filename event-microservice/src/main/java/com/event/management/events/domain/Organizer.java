@@ -21,7 +21,7 @@ public class Organizer {
     private String email;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
 
     public Long getId() {

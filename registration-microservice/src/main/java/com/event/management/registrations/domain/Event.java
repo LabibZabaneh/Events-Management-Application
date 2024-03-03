@@ -19,15 +19,6 @@ public class Event {
     @Column(nullable = false)
     private String eventName;
 
-    @Column(nullable = false)
-    private String venue;
-
-    @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
-    private String time;
-
     @JsonIgnore
     @ManyToMany
     private Set<User> registeredUsers;
@@ -56,27 +47,4 @@ public class Event {
         this.registeredUsers = registeredUsers;
     }
 
-    public String getVenue() {
-        return venue;
-    }
-
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }
