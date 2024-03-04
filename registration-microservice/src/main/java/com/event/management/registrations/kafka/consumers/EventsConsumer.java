@@ -22,9 +22,6 @@ public class EventsConsumer {
             Event event = new Event();
             event.setId(id);
             event.setEventName(dto.getEventName());
-            event.setDate(dto.getDate());
-            event.setTime(dto.getTime());
-            event.setVenue(dto.getVenue());
             eventsRepo.save(event);
 
             System.out.println("Event added with id" + id);
