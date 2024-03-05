@@ -3,6 +3,7 @@ package com.event.management.registrations.kafka.consumers;
 import com.event.management.registrations.domain.Event;
 import com.event.management.registrations.dto.EventDTO;
 import com.event.management.registrations.repositories.EventsRepository;
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
@@ -16,7 +17,7 @@ public class EventsConsumer {
     EventsRepository eventsRepo;
 
     @Topic("event-posted")
-    public void postedEvent(Long id, EventDTO dto){
+    public void postedEvent(@KafkaKey Long id, EventDTO dto){
         Optional<Event> oEvent = eventsRepo.findById(id);
         if (oEvent.isEmpty()){
             Event event = new Event();

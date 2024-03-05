@@ -3,6 +3,7 @@ package com.event.management.registrations.kafka.consumers;
 import com.event.management.registrations.domain.Organizer;
 import com.event.management.registrations.dto.OrganizerDTO;
 import com.event.management.registrations.repositories.OrganizersRepository;
+import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
@@ -16,7 +17,7 @@ public class OrganizersConsumer {
     OrganizersRepository organizersRepo;
 
     @Topic("organizer-created")
-    public void createdOrganizer(Long id, OrganizerDTO dto){
+    public void createdOrganizer(@KafkaKey Long id, OrganizerDTO dto){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             Organizer organizer = new Organizer();
