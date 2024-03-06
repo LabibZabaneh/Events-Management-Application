@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Events Management application is designed to facilitate the creation, management, and analysis of events. The application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance. The application is fully hosted on Docker containers.
+This Events Management application is designed to facilitate the creation, management, and analysis of events. The backend application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance. The application is fully hosted on Docker containers.
 
 ## Technologies Used
 
@@ -19,11 +19,10 @@ This Events Management application is designed to facilitate the creation, manag
 2. **Registration Microservice:**
    - Handles user registration to events.
    - Enables users to follow organizers
-   - (Under implementation)
 
 3. **Analytics Microservice:**
    - Provides insights into trending events and analytics.
-   - (To be implemented)
+   - (Under implementation)
 
 4. **Recommendation Microservice:**
    - Provides personalized event recommendations to users.
@@ -52,6 +51,5 @@ This Events Management application is designed to facilitate the creation, manag
 
 ## Acknowledgments
 
-- The event-microservice is currently implemented; however, other microservices are yet to be built.
+- The event-microservice and registration-microservice are currently implemented; however, other microservices are yet to be built.
 - There is no user interface yet; the development of the frontend will start after the full completion of the backend.
-
