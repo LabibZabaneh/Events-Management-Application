@@ -1,4 +1,4 @@
-package com.event.management.analytics.kafka;
+package com.event.management.analytics.kafka.consumers;
 
 import com.event.management.analytics.domain.Event;
 import com.event.management.analytics.domain.User;
@@ -14,8 +14,8 @@ import java.util.Optional;
 @KafkaListener
 public class RegistrationsConsumer {
 
-    static final String USER_REGISTERED_TOPIC = "user-registered";
-    static final String USER_UNREGISTERED_TOPIC = "user-unregistered";
+    public static final String REGISTRATIONS_TOPIC = "registrations";
+    public static final String UNREGISTRATIONS_TOPIC = "unregistrations";
 
     @Inject
     UsersRepository usersRepo;
@@ -23,7 +23,7 @@ public class RegistrationsConsumer {
     @Inject
     EventsRepository eventsRepo;
 
-    @Topic(USER_REGISTERED_TOPIC)
+    @Topic(REGISTRATIONS_TOPIC)
     public void registerUser(@KafkaKey Long userId, Long eventId){
         Optional<User> oUser = usersRepo.findById(userId);
         Optional<Event> oEvent = eventsRepo.findById(eventId);
@@ -40,7 +40,7 @@ public class RegistrationsConsumer {
         }
     }
 
-    @Topic(USER_UNREGISTERED_TOPIC)
+    @Topic(UNREGISTRATIONS_TOPIC)
     public void unregisterUser(@KafkaKey Long userId, Long eventId){
         Optional<User> oUser = usersRepo.findById(userId);
         Optional<Event> oEvent = eventsRepo.findById(eventId);

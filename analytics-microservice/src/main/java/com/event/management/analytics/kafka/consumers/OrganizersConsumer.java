@@ -1,4 +1,4 @@
-package com.event.management.analytics.kafka;
+package com.event.management.analytics.kafka.consumers;
 
 import com.event.management.analytics.domain.Organizer;
 import com.event.management.analytics.dto.OrganizerDTO;

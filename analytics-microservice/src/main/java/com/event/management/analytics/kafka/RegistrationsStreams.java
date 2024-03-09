@@ -1,6 +1,6 @@
 package com.event.management.analytics.kafka;
 
-import com.event.management.analytics.kafka.RegistrationsConsumer;
+import com.event.management.analytics.kafka.consumers.RegistrationsConsumer;
 import io.micronaut.configuration.kafka.streams.ConfiguredStreamBuilder;
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Singleton;
@@ -18,7 +18,7 @@ public class RegistrationsStreams {
         properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "registrations-streams");
         properties.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE);
 
-        KStream<Long, Long> registrationsStream = builder.stream(RegistrationsConsumer.USER_REGISTERED_TOPIC);
+        KStream<Long, Long> registrationsStream = builder.stream(RegistrationsConsumer.REGISTRATIONS_TOPIC);
 
         return registrationsStream;
     }

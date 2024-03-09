@@ -7,12 +7,12 @@ import io.micronaut.configuration.kafka.annotation.Topic;
 @KafkaClient
 public interface RegistrationProducer {
 
-    String USER_REGISTERED_TOPIC = "user-registered";
-    String USER_UNREGISTERED_TOPIC = "user-unregistered";
+    String REGISTRATIONS_TOPIC = "registrations";
+    String UNREGISTRATIONS_TOPIC = "unregistrations";
 
-    @Topic(USER_REGISTERED_TOPIC)
-    void registeredUser(@KafkaKey Long userId, Long eventId);
+    @Topic(REGISTRATIONS_TOPIC)
+    void addedRegistration(@KafkaKey Long userId, Long eventId);
 
-    @Topic(USER_UNREGISTERED_TOPIC)
-    void unregisteredUser(@KafkaKey Long userId, Long eventId);
+    @Topic(UNREGISTRATIONS_TOPIC)
+    void addedUnRegistration(@KafkaKey Long userId, Long eventId);
 }

@@ -66,7 +66,7 @@ public class RegistrationController {
         eventsRepo.update(e);
         usersRepo.update(u);
 
-        producer.registeredUser(userId, eventId);
+        producer.addedRegistration(userId, eventId);
 
         return HttpResponse.ok();
     }
@@ -84,7 +84,7 @@ public class RegistrationController {
         User user = oUser.get();
 
         if (event.getRegisteredUsers().removeIf(u -> userId == u.getId()) && user.getRegisteredEvents().removeIf(e -> eventId == e.getId())){
-            producer.unregisteredUser(userId, eventId);
+            producer.addedUnRegistration(userId, eventId);
         }
 
         eventsRepo.update(event);
