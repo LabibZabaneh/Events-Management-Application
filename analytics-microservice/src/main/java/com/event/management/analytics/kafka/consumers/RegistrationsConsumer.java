@@ -14,8 +14,8 @@ import java.util.Optional;
 @KafkaListener
 public class RegistrationsConsumer {
 
-    final String USER_REGISTERED_TOPIC = "user-registered";
-    final String USER_UNREGISTERED_TOPIC = "user-unregistered";
+    static final String USER_REGISTERED_TOPIC = "user-registered";
+    static final String USER_UNREGISTERED_TOPIC = "user-unregistered";
 
     @Inject
     UsersRepository usersRepo;
