@@ -1,10 +1,10 @@
 package com.event.management.analytics.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Serdeable
 @Entity
@@ -18,6 +18,10 @@ public class Organizer {
 
     @Column(nullable = false)
     private int followers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Event> postedEvents;
 
     public Long getId() {
         return id;
@@ -51,5 +55,13 @@ public class Organizer {
         if (this.followers > 0){
             this.followers -= 1;
         }
+    }
+
+    public Set<Event> getPostedEvents() {
+        return postedEvents;
+    }
+
+    public void setPostedEvents(Set<Event> postedEvents) {
+        this.postedEvents = postedEvents;
     }
 }

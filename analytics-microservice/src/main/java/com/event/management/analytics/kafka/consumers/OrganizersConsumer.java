@@ -8,6 +8,7 @@ import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 @KafkaListener
@@ -27,6 +28,7 @@ public class OrganizersConsumer {
             organizer.setId(id);
             organizer.setName(dto.getName());
             organizer.setFollowers(0);
+            organizer.setPostedEvents(new HashSet<>());
             repo.save(organizer);
             System.out.println("Organizer created with id " + id);
         }

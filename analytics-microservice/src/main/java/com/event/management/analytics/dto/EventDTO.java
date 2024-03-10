@@ -6,6 +6,8 @@ import io.micronaut.serde.annotation.Serdeable;
 public class EventDTO {
 
     private String name;
+
+    private Long organizerId;
     private int registrations;
 
     public String getName() {
@@ -14,6 +16,14 @@ public class EventDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(Long organizerId) {
+        this.organizerId = organizerId;
     }
 
     public int getRegistrations() {
