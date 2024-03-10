@@ -9,7 +9,9 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import jakarta.inject.Inject;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Controller("/analytics")
 public class TrendingController {
@@ -23,29 +25,34 @@ public class TrendingController {
     @Inject
     OrganizersRepository organizersRepo;
 
+    @Get("/organizers")
+    public Iterable<Organizer> getOrganizers(){
+        return organizersRepo.findAll();
+    }
+
+    @Transactional
+    @Get("organizers/{id}/popular-events")
+    public List<Event> getOrganizerPopularEvents(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return null;
+        }
+        return organizersRepo.findTopRegisteredEventsByOrganizerId(id, 10);
+    }
+
     @Get("/popular/events")
     public List<Event> getPopularEvents(){
         return eventsRepo.findTop10ByOrderByRegistrationsDesc();
     }
 
-    @Get("/trending/events")
-    public void getTrendingEvents(){
-
-    }
-
-    @Get("/popular/organizers/")
+    @Get("/popular/organizers")
     public List<Organizer> getPopularOrganizers(){
         return organizersRepo.findTop10ByOrderByFollowersDesc();
     }
 
-    @Get("/trending/organizers/")
-    public void getTrendingOrganizers(){
 
-    }
 
-    @Get("/activity/users/")
-    public void getActiveUsers(){
-
-    }
+    @Get("/activity/users")
+    public void getActiveUsers(){}
 
 }
