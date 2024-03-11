@@ -13,6 +13,8 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.event.management.events.OrganizerControllerTest.createOrganizer;
@@ -46,7 +48,7 @@ public class EventsControllerTest {
 
     @Test
     public void addEventWithInvalidOrganizer(){
-        EventDTO dto = createEventDTO("Halloween", 0L, "Club Salvation", "31/10/2024", "23:00");
+        EventDTO dto = createEventDTO("Halloween", 0L, "Club Salvation", LocalDate.of(2024, 5, 25), LocalTime.MIDNIGHT);
 
         HttpResponse<Void> resp = client.addEvent(dto);
         assertEquals(HttpStatus.NOT_FOUND, resp.getStatus(), "Creation should not be successful");
@@ -57,7 +59,7 @@ public class EventsControllerTest {
         Organizer o = createOrganizer("York Parties", "york.parties@gmail.com");
         organizerRepo.save(o);
 
-        EventDTO dto = createEventDTO("Halloween", o.getId(), "Club Salvation", "31/10/2024", "23:00");
+        EventDTO dto = createEventDTO("Halloween", o.getId(), "Club Salvation", LocalDate.of(2024, 5, 25), LocalTime.MIDNIGHT);
 
         HttpResponse<Void> resp = client.addEvent(dto);
         assertEquals(HttpStatus.CREATED, resp.getStatus(), "Creation should be successful");
@@ -73,7 +75,7 @@ public class EventsControllerTest {
         Organizer o = createOrganizer("York Parties", "york.parties@gmail.com");
         organizerRepo.save(o);
 
-        Event e = createEvent("Halloween", o, "Club Salvation", "31/10/2024", "23:00");
+        Event e = createEvent("Halloween", o, "Club Salvation", LocalDate.of(2024, 5, 25), LocalTime.MIDNIGHT);
         repo.save(e);
 
         Event repoEvent = client.getEvent(e.getId());
@@ -85,10 +87,10 @@ public class EventsControllerTest {
         Organizer o = createOrganizer("York Parties", "york.parties@gmail.com");
         organizerRepo.save(o);
 
-        Event e = createEvent("Halloween", o, "Club Salvation", "31/10/2024", "23:00");
+        Event e = createEvent("Halloween", o, "Club Salvation", LocalDate.of(2024, 5, 25), LocalTime.MIDNIGHT);
         repo.save(e);
 
-        EventDTO dto = createEventDTO("Freshers", o.getId(), "Revs", "25/09/2022", "12:00");
+        EventDTO dto = createEventDTO("Freshers", o.getId(), "Revs", LocalDate.of(2022, 7, 5), LocalTime.NOON);
         HttpResponse<Void> resp = client.updateEvent(e.getId(), dto);
         assertEquals(HttpStatus.OK, resp.getStatus(), "Update should be successful");
 
@@ -101,14 +103,14 @@ public class EventsControllerTest {
         Organizer o = createOrganizer("York Parties", "york.parties@gmail.com");
         organizerRepo.save(o);
 
-        Event e = createEvent("Halloween", o, "Club Salvation", "31/10/2024", "23:00");
+        Event e = createEvent("Halloween", o, "Club Salvation", LocalDate.of(2024, 5, 25), LocalTime.MIDNIGHT);
         repo.save(e);
 
         HttpResponse<Void> resp = client.deleteEvent(e.getId());
         assertEquals(HttpStatus.OK, resp.getStatus(), "Deletion should be successful");
     }
 
-    private Event createEvent(String eventName, Organizer organizer, String venue, String date, String time) {
+    private Event createEvent(String eventName, Organizer organizer, String venue, LocalDate date, LocalTime time) {
         Event e = new Event();
         e.setEventName(eventName);
         e.setOrganizer(organizer);
@@ -118,7 +120,7 @@ public class EventsControllerTest {
         return e;
     }
 
-    private EventDTO createEventDTO(String eventName, Long organizerId, String venue, String date, String time){
+    private EventDTO createEventDTO(String eventName, Long organizerId, String venue, LocalDate date, LocalTime time){
         EventDTO dto = new EventDTO();
         dto.setEventName(eventName);
         dto.setOrganizerId(organizerId);

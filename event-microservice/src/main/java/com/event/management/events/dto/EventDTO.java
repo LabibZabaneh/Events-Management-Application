@@ -2,14 +2,17 @@ package com.event.management.events.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Serdeable
 public class EventDTO {
 
     private String eventName;
     private Long organizerId;
     private String venue;
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
 
     public String getEventName() {
         return eventName;
@@ -35,20 +38,19 @@ public class EventDTO {
         this.venue = venue;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
-
 }

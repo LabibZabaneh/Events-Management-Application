@@ -3,6 +3,8 @@ package com.event.management.events.domain;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Serdeable
 @Entity
@@ -23,10 +25,10 @@ public class Event {
     private String venue;
 
     @Column(nullable = false)
-    private String date;
+    private LocalDate date;
 
     @Column(nullable = false)
-    private String time;
+    private LocalTime time;
 
     public Long getId() {
         return id;
@@ -60,20 +62,19 @@ public class Event {
         this.venue = venue;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
-
 }
