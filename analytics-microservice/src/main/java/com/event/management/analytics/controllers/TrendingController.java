@@ -50,8 +50,6 @@ public class TrendingController {
         return organizersRepo.findTop10ByOrderByFollowersDesc();
     }
 
-
-
     @Get("/activity/users")
     public void getActiveUsers(){}
 

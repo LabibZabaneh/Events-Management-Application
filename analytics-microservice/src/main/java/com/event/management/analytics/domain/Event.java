@@ -3,6 +3,8 @@ package com.event.management.analytics.domain;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Serdeable
 @Entity
@@ -20,6 +22,9 @@ public class Event {
 
     @Column(nullable = false)
     private int registrations;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<AgeCount> ageCounts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -45,13 +50,21 @@ public class Event {
         this.registrations = registrations;
     }
 
-    public void addRegistration(){
-        this.registrations += 1;
+    public void addRegistration(){ // Temp Age 100000000 until I refactor the kafka communication to pass the age
+        for (AgeCount ageCount : ageCounts){
+            if (ageCount.getAge() == 10000000){
+                ageCount.incrementCount();
+                this.registrations++;
+                return;
+            }
+        }
+        ageCounts.add(new AgeCount(this, 10000000, 1));
+        this.registrations++;
     }
 
     public void deleteRegistration(){
         if (this.registrations > 0){
-            this.registrations -= 1;
+            this.registrations--;
         }
     }
 
@@ -61,5 +74,13 @@ public class Event {
 
     public void setOrganizer(Organizer organizer) {
         this.organizer = organizer;
+    }
+
+    public List<AgeCount> getAgeCounts() {
+        return ageCounts;
+    }
+
+    public void setAgeCounts(List<AgeCount> ageCounts) {
+        this.ageCounts = ageCounts;
     }
 }

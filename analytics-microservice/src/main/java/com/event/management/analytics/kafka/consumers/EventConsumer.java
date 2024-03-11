@@ -9,6 +9,7 @@ import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @KafkaListener
@@ -32,6 +33,7 @@ public class EventConsumer {
             event.setName(dto.getName());
             event.setOrganizer(organizersRepo.findById(dto.getOrganizerId()).get());
             event.setRegistrations(0);
+            event.setAgeCounts(new ArrayList<>());
             repo.save(event);
             System.out.println("Event posted with id " + id);
         }
