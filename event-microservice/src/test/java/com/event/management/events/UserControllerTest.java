@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class UserControllerTest {
 
     @Test
     public void addUser(){
-        UserDTO dto = createUserDTO("Joe", "Doe", "joe.doe@example.com", "+44 1111111111", "15/11/2004");
+        UserDTO dto = createUserDTO("Joe", "Doe", "joe.doe@example.com", "+44 1111111111", LocalDate.of(2003, 5, 10 ));
 
         HttpResponse<Void> resp = client.addUser(dto);
         assertEquals(HttpStatus.CREATED, resp.getStatus(), "Creation should be successful");
@@ -53,7 +54,7 @@ public class UserControllerTest {
 
     @Test
     public void getUser(){
-        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", "20/03/2005");
+        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", LocalDate.of(2003, 5, 10 ));
         repo.save(u);
 
         User repoUser =  client.getUser(u.getId());
@@ -62,10 +63,10 @@ public class UserControllerTest {
 
     @Test
     public void updateUser(){
-        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", "20/03/2005");
+        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", LocalDate.of(2003, 5, 10 ));
         repo.save(u);
 
-        UserDTO dto = createUserDTO("Joe", "Doe", "joe.doe@example.com", "+44 1111111111", "15/11/2004");
+        UserDTO dto = createUserDTO("Joe", "Doe", "joe.doe@example.com", "+44 1111111111", LocalDate.of(2005, 2, 22 ));
 
         HttpResponse<Void> resp = client.updateUser(u.getId(), dto);
         assertEquals(HttpStatus.OK, resp.getStatus(), "Update should be successful");
@@ -76,7 +77,7 @@ public class UserControllerTest {
 
     @Test
     public void deleteUser(){
-        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", "20/03/2005");
+        User u = createUser("Smith", "Dan", "smith.dan@example.com", "+44 0000000000", LocalDate.of(2003, 5, 10 ));
         repo.save(u);
 
         HttpResponse<Void> resp = client.deleteUser(u.getId());
@@ -101,7 +102,7 @@ public class UserControllerTest {
         assertEquals(dto.getDateOfBirth(), u.getDateOfBirth(), "The date of birth should match the one in the dto");
     }
 
-    private UserDTO createUserDTO(String firstName, String lastName, String email, String mobileNumber, String dateOfBirth){
+    private UserDTO createUserDTO(String firstName, String lastName, String email, String mobileNumber, LocalDate dateOfBirth){
         UserDTO dto = new UserDTO();
         dto.setFirstName(firstName);
         dto.setLastName(lastName);
@@ -111,7 +112,7 @@ public class UserControllerTest {
         return dto;
     }
 
-    private User createUser(String firstName, String lastName, String email, String mobileNumber, String dateOfBirth){
+    private User createUser(String firstName, String lastName, String email, String mobileNumber, LocalDate dateOfBirth){
         User u = new User();
         u.setFirstName(firstName);
         u.setLastName(lastName);
