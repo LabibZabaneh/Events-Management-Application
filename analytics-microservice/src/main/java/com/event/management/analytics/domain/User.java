@@ -5,6 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDate;
 
 @Serdeable
 @Entity
@@ -18,6 +19,9 @@ public class User {
 
     @Column(nullable = false)
     private int registrations;
+
+    @Column(nullable = false)
+    private LocalDate dateOfBirth;
 
     public Long getId() {
         return id;
@@ -51,5 +55,13 @@ public class User {
         if (this.registrations > 0){
             this.registrations -= 1;
         }
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

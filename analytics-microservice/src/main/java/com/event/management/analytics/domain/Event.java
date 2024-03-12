@@ -50,15 +50,15 @@ public class Event {
         this.registrations = registrations;
     }
 
-    public void addRegistration(){ // Temp Age 100000000 until I refactor the kafka communication to pass the age
+    public void addRegistration(int age){
         for (AgeCount ageCount : ageCounts){
-            if (ageCount.getAge() == 10000000){
+            if (ageCount.getAge() == age){
                 ageCount.incrementCount();
                 this.registrations++;
                 return;
             }
         }
-        ageCounts.add(new AgeCount(this, 10000000, 1));
+        ageCounts.add(new AgeCount(this, age, 1));
         this.registrations++;
     }
 

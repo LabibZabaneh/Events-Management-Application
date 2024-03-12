@@ -9,6 +9,8 @@ import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @KafkaListener
@@ -33,7 +35,7 @@ public class RegistrationsConsumer {
             usersRepo.update(user);
 
             Event event = oEvent.get();
-            event.addRegistration();
+            event.addRegistration(dateOfBirthToAge(user.getDateOfBirth()));
             eventsRepo.update(event);
 
             System.out.println("User with id " + userId + "registered to event with id " + eventId);
@@ -55,5 +57,11 @@ public class RegistrationsConsumer {
 
             System.out.println("User with id " + userId + "unregistered to event with id " + eventId);
         }
+    }
+
+    private int dateOfBirthToAge(LocalDate dateOfBirth){
+        LocalDate today = LocalDate.now();
+        Period period = Period.between(dateOfBirth, today);
+        return period.getYears();
     }
 }
