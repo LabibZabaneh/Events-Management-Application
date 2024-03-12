@@ -64,16 +64,7 @@ public class TrendingController {
         if (oEvent.isEmpty()){
             return 0.0;
         }
-        Event event = oEvent.get();
-        int totalRegistrations = event.getRegistrations();
-        if (totalRegistrations == 0){
-            return 0.0;
-        }
-        int totalAge = 0;
-        for (AgeCount ageCount : event.getAgeCounts()){
-            totalAge += ageCount.getAge() * ageCount.getCount();
-        }
-        return (double) totalAge / totalRegistrations;
+        return oEvent.get().getAverageAge();
     }
 
     @Transactional
