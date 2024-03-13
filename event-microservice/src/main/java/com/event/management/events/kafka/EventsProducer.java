@@ -8,7 +8,7 @@ import io.micronaut.configuration.kafka.annotation.Topic;
 @KafkaClient
 public interface EventsProducer {
 
-    String EVENT_POSTED_TOPIC = "event-post";
+    String EVENT_POSTED_TOPIC = "event-posted";
     String EVENT_DELETED_TOPIC = "event-deleted";
 
     @Topic(EVENT_POSTED_TOPIC)

@@ -15,7 +15,7 @@ import java.util.Optional;
 @KafkaListener
 public class EventConsumer {
 
-    final String EVENT_POSTED_TOPIC = "event-post";
+    final String EVENT_POSTED_TOPIC = "event-posted";
     final String EVENT_DELETED_TOPIC = "event-deleted";
 
     @Inject
