@@ -11,9 +11,7 @@ import io.micronaut.http.annotation.Get;
 import jakarta.inject.Inject;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller("/analytics")
 public class TrendingController {
@@ -33,13 +31,50 @@ public class TrendingController {
     }
 
     @Transactional
-    @Get("organizers/{id}/popular-events")
+    @Get("/organizers/{id}/popular-events")
     public List<Event> getOrganizerPopularEvents(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return null;
         }
         return organizersRepo.findTopRegisteredEventsByOrganizerId(id, 10);
+    }
+
+    @Get("/organizers/{id}/age-distribution")
+    public Map<Integer, Integer> getOrganizerAgeDistribution(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return null;
+        }
+        Organizer organizer = oOrganizer.get();
+        Map<Integer, Integer> ageCounts = new HashMap<>();
+        for (Event event : organizer.getPostedEvents()){
+            for (AgeCount ageCount : event.getAgeCounts()){
+                int age = ageCount.getAge();
+                int currentCount = ageCounts.getOrDefault(age, 0); // Get existing count or default to 0
+                ageCounts.put(age, currentCount + ageCount.getCount()); // Update count
+            }
+        }
+        return ageCounts;
+    }
+
+    @Get("/organizers/{id}/average-age")
+    public double getOrganizerAverageAge(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return 0.0;
+        }
+        Organizer organizer = oOrganizer.get();
+        double totalRegistrations = 0.0;
+        double totalAge = 0.0;
+        for (Event event : organizer.getPostedEvents()){
+            totalRegistrations += (double) event.getRegistrations();
+            totalAge += event.getAverageAge() * (double) event.getRegistrations();
+        }
+        if (totalRegistrations == 0.0){
+            return 0.0;
+        }
+        return totalAge/totalRegistrations;
     }
 
     @Get("/events")
