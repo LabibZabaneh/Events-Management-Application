@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Serdeable
@@ -22,6 +24,9 @@ public class Organizer {
     @JsonIgnore
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
+
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
+    private List<OrganizerAgeCount> ageCounts = new ArrayList<>(); // Regarding followers only
 
     public Long getId() {
         return id;
@@ -63,5 +68,13 @@ public class Organizer {
 
     public void setPostedEvents(Set<Event> postedEvents) {
         this.postedEvents = postedEvents;
+    }
+
+    public List<OrganizerAgeCount> getAgeCounts() {
+        return ageCounts;
+    }
+
+    public void setAgeCounts(List<OrganizerAgeCount> ageCounts) {
+        this.ageCounts = ageCounts;
     }
 }

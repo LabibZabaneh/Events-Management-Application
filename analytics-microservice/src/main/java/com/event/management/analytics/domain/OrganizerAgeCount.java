@@ -1,21 +1,20 @@
 package com.event.management.analytics.domain;
 
-
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
 
 @Serdeable
 @Entity
-public class AgeCount {
+public class OrganizerAgeCount {
 
     @GeneratedValue
     @Id
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name="event_id")
-    private Event event;
+    @JoinColumn(name="organizer_id")
+    private Organizer organizer;
 
     @Column(nullable = false)
     private int age;
@@ -23,8 +22,8 @@ public class AgeCount {
     @Column(nullable = false)
     private int count;
 
-    public AgeCount(Event event, int age, int count) {
-        this.event = event;
+    public OrganizerAgeCount(Organizer organizer, int age, int count) {
+        this.organizer = organizer;
         this.age = age;
         this.count = 0;
         if (count < 0){
@@ -32,7 +31,7 @@ public class AgeCount {
         }
     }
 
-    public AgeCount() {
+    public OrganizerAgeCount() {
 
     }
 
@@ -44,12 +43,12 @@ public class AgeCount {
         this.id = id;
     }
 
-    public Event getEvent() {
-        return event;
+    public Organizer getOrganizer() {
+        return organizer;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
     }
 
     public int getAge() {

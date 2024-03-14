@@ -26,7 +26,7 @@ public class Event {
     @Column(nullable = false)
     private double averageAge = 0;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
     private List<AgeCount> ageCounts = new ArrayList<>();
 
     public Long getId() {
