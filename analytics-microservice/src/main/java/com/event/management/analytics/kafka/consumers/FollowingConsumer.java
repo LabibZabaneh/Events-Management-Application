@@ -11,6 +11,8 @@ import jakarta.inject.Inject;
 
 import java.util.Optional;
 
+import static com.event.management.analytics.kafka.consumers.RegistrationsConsumer.dateOfBirthToAge;
+
 @KafkaListener
 public class FollowingConsumer {
 
@@ -29,7 +31,7 @@ public class FollowingConsumer {
         Optional<Organizer> oOrganizer = organizersRepo.findById(organizerId);
         if (oOrganizer.isPresent() && oUser.isPresent()){
             Organizer organizer = oOrganizer.get();
-            organizer.addFollower();
+            organizer.addFollower(dateOfBirthToAge(oUser.get().getDateOfBirth()));
             organizersRepo.update(organizer);
 
             System.out.println("Added a follower to Organizer with id " + organizerId);
@@ -42,7 +44,7 @@ public class FollowingConsumer {
         Optional<Organizer> oOrganizer = organizersRepo.findById(organizerId);
         if (oOrganizer.isPresent() && oUser.isPresent()){
             Organizer organizer = oOrganizer.get();
-            organizer.removeFollower();
+            organizer.removeFollower(dateOfBirthToAge(oUser.get().getDateOfBirth()));
             organizersRepo.update(organizer);
 
             System.out.println("Added a follower to Organizer with id " + organizerId);

@@ -21,6 +21,9 @@ public class Organizer {
     @Column(nullable = false)
     private int followers;
 
+    @Column(nullable = false)
+    private double averageAge;
+
     @JsonIgnore
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
@@ -44,6 +47,14 @@ public class Organizer {
         this.name = name;
     }
 
+    public double getAverageAge() {
+        return averageAge;
+    }
+
+    public void setAverageAge(double averageAge) {
+        this.averageAge = averageAge;
+    }
+
     public int getFollowers() {
         return followers;
     }
@@ -52,13 +63,29 @@ public class Organizer {
         this.followers = followers;
     }
 
-    public void addFollower(){
-        this.followers += 1;
+    public void addFollower(int age){
+        for (OrganizerAgeCount ageCount : ageCounts){
+            if (ageCount.getAge() == age){
+                ageCount.incrementCount();
+                this.followers++;
+                return;
+            }
+        }
+        ageCounts.add(new OrganizerAgeCount(this, age, 1));
+        this.averageAge = (this.averageAge * (this.followers-1) + age) / this.followers;
+        this.followers++;
     }
 
-    public void removeFollower(){
-        if (this.followers > 0){
-            this.followers -= 1;
+    public void removeFollower(int age){
+        if (this.followers > 0 && this.averageAge > 0){
+            for (OrganizerAgeCount ageCount : ageCounts){
+                if (ageCount.getAge() == age){
+                    ageCount.decrementCount();
+                    this.followers--;
+                    this.averageAge = (this.averageAge * (this.followers+1) - age) / this.followers;
+                    return;
+                }
+            }
         }
     }
 

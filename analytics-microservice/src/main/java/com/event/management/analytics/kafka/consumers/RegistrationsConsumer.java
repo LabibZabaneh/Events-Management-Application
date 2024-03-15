@@ -59,7 +59,7 @@ public class RegistrationsConsumer {
         }
     }
 
-    private int dateOfBirthToAge(LocalDate dateOfBirth){
+    protected static int dateOfBirthToAge(LocalDate dateOfBirth){
         LocalDate today = LocalDate.now();
         Period period = Period.between(dateOfBirth, today);
         return period.getYears();
