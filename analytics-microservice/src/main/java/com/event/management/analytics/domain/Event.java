@@ -24,7 +24,7 @@ public class Event {
     private int registrations;
 
     @Column(nullable = false)
-    private double averageAge = 0;
+    private double averageAge;
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
     private List<EventAgeCount> ageCounts = new ArrayList<>();
@@ -63,12 +63,19 @@ public class Event {
         }
         ageCounts.add(new EventAgeCount(this, age, 1));
         this.registrations++;
-        this.averageAge = (this.averageAge * (this.registrations-1) + age) / (this.registrations);
+        this.averageAge = (this.averageAge * (this.registrations-1) + age) / this.registrations;
     }
 
-    public void deleteRegistration(){
-        if (this.registrations > 0){
-            this.registrations--;
+    public void deleteRegistration(int age){
+        if (this.registrations > 0 && this.averageAge > 0){
+            for (EventAgeCount ageCount : ageCounts){
+                if (ageCount.getAge() == age){
+                    ageCount.decrementCount();
+                    this.registrations--;
+                    this.averageAge = (this.averageAge * (registrations+1) - age) / this.registrations;
+                    return;
+                }
+            }
         }
     }
 

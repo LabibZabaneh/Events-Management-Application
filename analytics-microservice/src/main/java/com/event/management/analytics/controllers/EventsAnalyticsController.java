@@ -21,14 +21,14 @@ public class EventsAnalyticsController {
         return eventsRepo.findAll();
     }
 
-    @Transactional
     @Get("/events/{id}/age-distribution")
     public List<EventAgeCount> getEventAgeDistribution(long id){
         Optional<Event> oEvent = eventsRepo.findById(id);
         if (oEvent.isEmpty()){
             return Collections.emptyList();
         }
-        return eventsRepo.findById(id).get().getAgeCounts();
+        return oEvent.get().getAgeCounts()
+                ;
     }
 
     @Get("/events/{id}/average-age")

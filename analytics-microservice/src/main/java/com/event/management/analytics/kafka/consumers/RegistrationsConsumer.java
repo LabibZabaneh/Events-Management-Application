@@ -52,7 +52,7 @@ public class RegistrationsConsumer {
             usersRepo.update(user);
 
             Event event = oEvent.get();
-            event.deleteRegistration();
+            event.deleteRegistration(dateOfBirthToAge(user.getDateOfBirth()));
             eventsRepo.update(event);
 
             System.out.println("User with id " + userId + "unregistered to event with id " + eventId);
