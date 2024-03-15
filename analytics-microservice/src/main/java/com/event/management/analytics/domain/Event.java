@@ -27,7 +27,7 @@ public class Event {
     private double averageAge = 0;
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
-    private List<AgeCount> ageCounts = new ArrayList<>();
+    private List<EventAgeCount> ageCounts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -54,14 +54,14 @@ public class Event {
     }
 
     public void addRegistration(int age){
-        for (AgeCount ageCount : ageCounts){
+        for (EventAgeCount ageCount : ageCounts){
             if (ageCount.getAge() == age){
                 ageCount.incrementCount();
                 this.registrations++;
                 return;
             }
         }
-        ageCounts.add(new AgeCount(this, age, 1));
+        ageCounts.add(new EventAgeCount(this, age, 1));
         this.registrations++;
         this.averageAge = (this.averageAge * (this.registrations-1) + age) / (this.registrations);
     }
@@ -80,11 +80,11 @@ public class Event {
         this.organizer = organizer;
     }
 
-    public List<AgeCount> getAgeCounts() {
+    public List<EventAgeCount> getAgeCounts() {
         return ageCounts;
     }
 
-    public void setAgeCounts(List<AgeCount> ageCounts) {
+    public void setAgeCounts(List<EventAgeCount> ageCounts) {
         this.ageCounts = ageCounts;
     }
 

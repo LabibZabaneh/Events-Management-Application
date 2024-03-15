@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Serdeable
 @Entity
-public class AgeCount {
+public class EventAgeCount {
 
     @GeneratedValue
     @Id
@@ -23,7 +23,7 @@ public class AgeCount {
     @Column(nullable = false)
     private int count;
 
-    public AgeCount(Event event, int age, int count) {
+    public EventAgeCount(Event event, int age, int count) {
         this.event = event;
         this.age = age;
         this.count = 0;
@@ -32,7 +32,7 @@ public class AgeCount {
         }
     }
 
-    public AgeCount() {
+    public EventAgeCount() {
 
     }
 

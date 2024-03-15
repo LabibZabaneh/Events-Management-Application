@@ -1,7 +1,7 @@
 package com.event.management.analytics.controllers;
 
-import com.event.management.analytics.domain.AgeCount;
 import com.event.management.analytics.domain.Event;
+import com.event.management.analytics.domain.EventAgeCount;
 import com.event.management.analytics.domain.Organizer;
 import com.event.management.analytics.repositories.OrganizersRepository;
 import io.micronaut.http.annotation.Controller;
@@ -49,7 +49,7 @@ public class OrganizersAnalyticsController {
         Organizer organizer = oOrganizer.get();
         Map<Integer, Integer> ageCounts = new HashMap<>();
         for (Event event : organizer.getPostedEvents()){
-            for (AgeCount ageCount : event.getAgeCounts()){
+            for (EventAgeCount ageCount : event.getAgeCounts()){
                 int age = ageCount.getAge();
                 int currentCount = ageCounts.getOrDefault(age, 0); // Get existing count or default to 0
                 ageCounts.put(age, currentCount + ageCount.getCount()); // Update count
