@@ -3,16 +3,14 @@ package com.event.management.analytics.controllers;
 import com.event.management.analytics.domain.Event;
 import com.event.management.analytics.domain.EventAgeCount;
 import com.event.management.analytics.domain.Organizer;
+import com.event.management.analytics.domain.OrganizerAgeCount;
 import com.event.management.analytics.repositories.OrganizersRepository;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import jakarta.inject.Inject;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller("/analytics")
 public class OrganizersAnalyticsController {
@@ -40,8 +38,8 @@ public class OrganizersAnalyticsController {
         return organizersRepo.findTopRegisteredEventsByOrganizerId(id, 10);
     }
 
-    @Get("/organizers/{id}/overall-events-registrations-age-distribution")
-    public Map<Integer, Integer> getOrganizerAgeDistribution(long id){
+    @Get("/organizers/{id}/registrations-age-distribution")
+    public Map<Integer, Integer> getOrganizerRegistrationAgeDistribution(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return null;
@@ -58,8 +56,8 @@ public class OrganizersAnalyticsController {
         return ageCounts;
     }
 
-    @Get("/organizers/{id}/overall-events-registrations-average-age")
-    public double getOrganizerAverageAge(long id){
+    @Get("/organizers/{id}/registrations-average-age")
+    public double getOrganizerRegistrationsAverageAge(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return 0.0;
@@ -75,5 +73,34 @@ public class OrganizersAnalyticsController {
             return 0.0;
         }
         return totalAge/totalRegistrations;
+    }
+
+    @Get("/organizers/{id}/followers-age-distribution")
+    public List<OrganizerAgeCount> getOrganizerFollowersAgeDistribution(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return new ArrayList<>();
+        }
+        return oOrganizer.get().getAgeCounts();
+    }
+
+    @Get("/organizers/{id}/followers-average-age")
+    public double getOrganizerFollowersAverageAge(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return 0.0;
+        }
+        return oOrganizer.get().getAverageAge();
+    }
+
+    @Get("/organizers/{id}/followers-top-age-groups/{limit}")
+    public List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroup(long id, int limit){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return Collections.emptyList();
+        }
+        List<OrganizerAgeCount> ageCounts = oOrganizer.get().getAgeCounts();
+        ageCounts.sort((a1, a2) -> a2.getCount() - a1.getCount());
+        return ageCounts.subList(0, Math.min(limit, ageCounts.size()));
     }
 }
