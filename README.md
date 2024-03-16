@@ -45,9 +45,10 @@ This Events Management application is designed to facilitate the creation, manag
 ### Building and Running the Microservices
 
 1. Clone the repository: `git clone https://github.com/LabibZabaneh/Events-Management-Application.git`
-2. Run the application using Docker Compose: `docker-compose up -d`
-3. Access the event-microservice at: [http://localhost:8080](http://localhost:8080) (must manually run the microservice)
-4. Access the registration-microservice at: [http://localhost:8081](http://localhost:8081) (must manually run the microservice)
+2. Navigate to the directory: `cd Events-Management-Application`
+3. Run the application using Docker Compose: `docker-compose up -d`
+4. Access the event-microservice at: [http://localhost:8080](http://localhost:8080) (must manually run the microservice)
+5. Access the registration-microservice at: [http://localhost:8081](http://localhost:8081) (must manually run the microservice)
 
 ## Acknowledgments
 
