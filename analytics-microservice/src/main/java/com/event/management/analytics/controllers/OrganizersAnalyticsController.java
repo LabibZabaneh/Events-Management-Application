@@ -39,7 +39,7 @@ public class OrganizersAnalyticsController {
     }
 
     @Get("/organizers/{id}/registrations-age-distribution")
-    public Map<Integer, Integer> getOrganizerRegistrationAgeDistribution(long id){
+    public Map<Integer, Integer> getOrganizerRegistrationsAgeDistribution(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return null;

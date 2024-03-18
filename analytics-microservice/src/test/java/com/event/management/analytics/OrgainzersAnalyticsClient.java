@@ -22,7 +22,7 @@ public interface OrgainzersAnalyticsClient {
     List<Event> getOrganizerPopularEvents(long id);
 
     @Get("/organizers/{id}/registrations-age-distribution")
-    Map<Integer, Integer> getOrganizerRegistrationAgeDistribution(long id);
+    Map<Integer, Integer> getOrganizerRegistrationsAgeDistribution(long id);
 
     @Get("/organizers/{id}/registrations-average-age")
     double getOrganizerRegistrationsAverageAge(long id);

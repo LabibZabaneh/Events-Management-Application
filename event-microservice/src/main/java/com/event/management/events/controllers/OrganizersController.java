@@ -29,6 +29,10 @@ public class OrganizersController {
 
     @Post("/")
     public HttpResponse<Void> addOrganizer(@Body OrganizerDTO dto){
+        String validEmail = "^[a-z0-9_][a-z0-9._-]*@[a-z0-9](?:[a-z0-9-]*[a-z0-9])*\\.[a-z]{2,}$";
+        if (!dto.getEmail().matches(validEmail)){
+            return HttpResponse.badRequest();
+        }
         Organizer o = new Organizer();
         o.setName(dto.getName());
         o.setEmail(dto.getEmail());
