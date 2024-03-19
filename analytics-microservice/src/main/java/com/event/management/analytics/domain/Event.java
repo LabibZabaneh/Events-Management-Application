@@ -98,4 +98,11 @@ public class Event {
     public double getAverageAge(){
         return averageAge;
     }
+
+    public void setAverageAge(int averageAge){
+        this.averageAge = 0;
+        if (averageAge > 0) {
+            this.averageAge = averageAge;
+        }
+    }
 }
