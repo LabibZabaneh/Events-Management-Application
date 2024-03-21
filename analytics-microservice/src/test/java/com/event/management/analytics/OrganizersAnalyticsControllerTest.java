@@ -3,6 +3,7 @@ package com.event.management.analytics;
 import com.event.management.analytics.domain.Event;
 import com.event.management.analytics.domain.EventAgeCount;
 import com.event.management.analytics.domain.Organizer;
+import com.event.management.analytics.domain.OrganizerAgeCount;
 import com.event.management.analytics.repositories.EventsRepository;
 import com.event.management.analytics.repositories.OrganizersRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -214,47 +215,104 @@ public class OrganizersAnalyticsControllerTest {
 
     @Test
     public void invalidOrganizerFollowersAgeDistribution(){
-
+        List<OrganizerAgeCount> organizerAgeCounts = client.getOrganizerFollowersAgeDistribution(0L);
+        assertTrue(organizerAgeCounts.isEmpty(), "should return an empty list for an invalid organizers");
     }
 
     @Test
     public void noOrganizerFollowersAgeDistribution(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
 
+        List<OrganizerAgeCount> organizerAgeCounts = client.getOrganizerFollowersAgeDistribution(organizer.getId());
+        assertTrue(organizerAgeCounts.isEmpty(), "should return an empty list for an invalid organizers");
     }
 
     @Test
     public void organizerFollowersAgeDistribution(){
+        final int age1 = 18;
+        final int age2 = 21;
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizer.addFollower(age1);
+        organizer.addFollower(age1);
+        organizer.addFollower(age2);
+        organizersRepo.save(organizer);
 
+        List<OrganizerAgeCount> organizerAgeCounts = client.getOrganizerFollowersAgeDistribution(organizer.getId());
+        assertEquals(2, organizerAgeCounts.size(), "Should have 2 age counts");
+        assertEquals(age1, organizerAgeCounts.get(0).getAge(), "The first age count should be age1");
+        assertEquals(2, organizerAgeCounts.get(0).getCount(), "the first age count should have a count of 2");
+        assertEquals(age2, organizerAgeCounts.get(1).getAge(), "The second age count should be age2");
+        assertEquals(1, organizerAgeCounts.get(1).getCount(), "the second age count should have a count of 1");
     }
 
     @Test
     public void invalidOrganizerFollowersAverageAge(){
-
+        double averageAge = client.getOrganizerFollowersAverageAge(0L);
+        assertEquals(0.0, averageAge, "Should return 0.0 for an invalid organizer");
     }
 
     @Test
     public void noOrganizerFollowersAverageAge(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
 
+        double averageAge = client.getOrganizerFollowersAverageAge(organizer.getId());
+        assertEquals(0.0, averageAge, "Should return 0.0 for organizer with zero followers");
     }
 
     @Test
     public void organizerFollowersAverageAge(){
+        final int age1 = 18;
+        final int age2 = 21;
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizer.addFollower(age1);
+        organizer.addFollower(age1);
+        organizer.addFollower(age2);
+        organizersRepo.save(organizer);
 
+        double expectedAverageAge = (age1 * 2 + age2)/3;
+        double averageAge = client.getOrganizerFollowersAverageAge(organizer.getId());
+        assertEquals(expectedAverageAge, averageAge, "Average age should be calculated correctly");
     }
 
     @Test
     public void invalidOrganizerFollowersTopAgeGroups(){
-
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(0L, 2);
+        assertTrue(topAgeGroups.isEmpty(), "Should return an empty list for an invalid organizer");
     }
 
     @Test
     public void noOrganizerFollowersTopAgeGroups(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
 
+        final int limit = 2;
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(organizer.getId(), limit);
+        assertEquals(0, topAgeGroups.size(), "Should return an empty list");
     }
 
     @Test
     public void organizerFollowersTopAgeGroups(){
+        final int age1 = 18;
+        final int age2 = 21;
+        final int age3 = 22;
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizer.addFollower(age1);
+        organizer.addFollower(age1);
+        organizer.addFollower(age2);
+        organizer.addFollower(age3);
+        organizer.addFollower(age3);
+        organizer.addFollower(age3);
+        organizersRepo.save(organizer);
 
+        final int limit = 2;
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(organizer.getId(), limit);
+        assertEquals(limit, topAgeGroups.size(), "Size should match the limit");
+        assertEquals(age3, topAgeGroups.get(0).getAge(), "The first age count should be age3");
+        assertEquals(3, topAgeGroups.get(0).getCount(), "Age3 count should be 3");
+        assertEquals(age1, topAgeGroups.get(1).getAge(), "The first age count should be age1 ");
+        assertEquals(2, topAgeGroups.get(1).getCount(), "Age1 count should be 2");
     }
 
     protected static <T> List<T> iterableToList(Iterable<T> iterable) {
