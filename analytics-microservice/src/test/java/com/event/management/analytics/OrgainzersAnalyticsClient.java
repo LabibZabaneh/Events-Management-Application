@@ -34,6 +34,6 @@ public interface OrgainzersAnalyticsClient {
     double getOrganizerFollowersAverageAge(long id);
 
     @Get("/organizers/{id}/followers-top-age-groups/{limit}")
-    List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroup(long id, int limit);
+    List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroups(long id, int limit);
 
 }

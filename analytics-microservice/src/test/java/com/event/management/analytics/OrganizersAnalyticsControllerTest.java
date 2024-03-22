@@ -278,7 +278,7 @@ public class OrganizersAnalyticsControllerTest {
 
     @Test
     public void invalidOrganizerFollowersTopAgeGroups(){
-        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(0L, 2);
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroups(0L, 2);
         assertTrue(topAgeGroups.isEmpty(), "Should return an empty list for an invalid organizer");
     }
 
@@ -288,7 +288,7 @@ public class OrganizersAnalyticsControllerTest {
         organizersRepo.save(organizer);
 
         final int limit = 2;
-        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(organizer.getId(), limit);
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroups(organizer.getId(), limit);
         assertEquals(0, topAgeGroups.size(), "Should return an empty list");
     }
 
@@ -307,7 +307,7 @@ public class OrganizersAnalyticsControllerTest {
         organizersRepo.save(organizer);
 
         final int limit = 2;
-        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroup(organizer.getId(), limit);
+        List<OrganizerAgeCount> topAgeGroups = client.getOrganizerFollowersTopAgeGroups(organizer.getId(), limit);
         assertEquals(limit, topAgeGroups.size(), "Size should match the limit");
         assertEquals(age3, topAgeGroups.get(0).getAge(), "The first age count should be age3");
         assertEquals(3, topAgeGroups.get(0).getCount(), "Age3 count should be 3");

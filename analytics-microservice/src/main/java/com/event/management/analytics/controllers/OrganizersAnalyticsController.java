@@ -94,7 +94,7 @@ public class OrganizersAnalyticsController {
     }
 
     @Get("/organizers/{id}/followers-top-age-groups/{limit}")
-    public List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroup(long id, int limit){
+    public List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroups(long id, int limit){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return Collections.emptyList();
