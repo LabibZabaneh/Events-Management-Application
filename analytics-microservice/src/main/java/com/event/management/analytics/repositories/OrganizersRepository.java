@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface OrganizersRepository extends CrudRepository<Organizer, Long> {
 
+    @Query("SELECT o FROM Organizer o ORDER BY o.followers DESC")
     List<Organizer> findTop10ByOrderByFollowersDesc();
 
     @Query("SELECT e FROM Event e WHERE e.organizer.id = :organizerId ORDER BY e.registrations DESC")

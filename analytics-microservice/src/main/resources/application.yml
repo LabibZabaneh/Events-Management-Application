@@ -1,9 +1,11 @@
 micronaut:
+  server:
+    port: 8082
   application:
     name: analyticsMicroservice
 datasources:
   default:
-    url: jdbc:mariadb://localhost:3306/analytics
+    url: jdbc:mariadb://localhost:3308/analytics
     username: analytics
     password: analyticssecret
     driver-class-name: org.mariadb.jdbc.Driver
@@ -23,4 +25,5 @@ jpa:
         hbm2ddl:
           auto: update
 kafka:
-  enabled: false
+  bootstrap:
+    servers: ${KAFKA_BOOTSTRAP_SERVERS:`localhost:9094`}

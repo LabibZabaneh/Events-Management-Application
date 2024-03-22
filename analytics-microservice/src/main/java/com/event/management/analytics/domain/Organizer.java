@@ -28,7 +28,7 @@ public class Organizer {
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
     private List<OrganizerAgeCount> ageCounts = new ArrayList<>(); // Regarding followers only
 
     public Long getId() {
