@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import static com.event.management.analytics.EventsAnalyticsControllerTest.createEvent;
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest(transactional = false)
@@ -32,6 +33,7 @@ public class OrganizersAnalyticsControllerTest {
 
     @BeforeEach
     public void clean(){
+        eventsRepo.deleteAll();
         organizersRepo.deleteAll();
     }
 
@@ -321,7 +323,7 @@ public class OrganizersAnalyticsControllerTest {
         return l;
     }
 
-    private Organizer createOrganizer(Long id, String name, int followers){
+    protected static Organizer createOrganizer(Long id, String name, int followers){
         Organizer organizer = new Organizer();
         organizer.setId(id);
         organizer.setName(name);
@@ -330,17 +332,6 @@ public class OrganizersAnalyticsControllerTest {
         organizer.setPostedEvents(new HashSet<>());
         organizer.setAgeCounts(new ArrayList<>());
         return organizer;
-    }
-
-    private Event createEvent(Long id, String name, Organizer organizer){
-        Event event = new Event();
-        event.setId(id);
-        event.setName(name);
-        event.setOrganizer(organizer);
-        event.setRegistrations(0);
-        event.setAverageAge(0);
-        event.setAgeCounts(new ArrayList<>());
-        return event;
     }
 
 }
