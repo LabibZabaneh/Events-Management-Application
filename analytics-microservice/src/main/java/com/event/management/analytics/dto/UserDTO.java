@@ -1,5 +1,6 @@
 package com.event.management.analytics.dto;
 
+import com.event.management.analytics.domain.Gender;
 import io.micronaut.serde.annotation.Serdeable;
 
 import java.time.LocalDate;
@@ -9,8 +10,8 @@ public class UserDTO {
 
     private String firstName;
     private int registrations;
-
     private LocalDate dateOfBirth;
+    private Gender gender;
 
     public String getFirstName() {
         return firstName;
@@ -34,5 +35,13 @@ public class UserDTO {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

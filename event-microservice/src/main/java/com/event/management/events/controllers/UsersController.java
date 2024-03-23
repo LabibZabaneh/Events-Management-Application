@@ -34,6 +34,7 @@ public class UsersController {
         u.setEmail(dto.getEmail());
         u.setDateOfBirth(dto.getDateOfBirth());
         u.setMobileNumber(dto.getMobileNumber());
+        u.setGender(dto.getGender());
         repo.save(u);
 
         producer.createdUser(u.getId(), dto);
@@ -74,6 +75,7 @@ public class UsersController {
         dto.setEmail(u.getEmail());
         dto.setDateOfBirth(u.getDateOfBirth());
         dto.setMobileNumber(u.getMobileNumber());
+        dto.setGender(u.getGender());
         producer.deletedUser(id, dto);
 
         return HttpResponse.ok();
@@ -94,6 +96,9 @@ public class UsersController {
         }
         if (dto.getDateOfBirth() != null){
             u.setDateOfBirth(dto.getDateOfBirth());
+        }
+        if (dto.getGender() != null){
+            u.setGender(dto.getGender());
         }
         return u;
     }

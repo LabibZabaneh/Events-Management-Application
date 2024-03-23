@@ -29,6 +29,7 @@ public class UsersConsumer {
             user.setFirstName(dto.getFirstName());
             user.setRegistrations(0);
             user.setDateOfBirth(dto.getDateOfBirth());
+            user.setGender(dto.getGender());
             repo.save(user);
 
             System.out.println("User added with id " + id);

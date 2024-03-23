@@ -2,9 +2,7 @@ package com.event.management.analytics.domain;
 
 import io.micronaut.serde.annotation.Serdeable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Serdeable
@@ -22,6 +20,9 @@ public class User {
 
     @Column(nullable = false)
     private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     public Long getId() {
         return id;
@@ -63,5 +64,13 @@ public class User {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

@@ -2,10 +2,7 @@ package com.event.management.events.domain;
 
 import io.micronaut.serde.annotation.Serdeable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Serdeable
@@ -29,6 +26,9 @@ public class User {
 
     @Column(nullable = false)
     private String mobileNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     public Long getId() {
         return id;
@@ -76,5 +76,13 @@ public class User {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }
