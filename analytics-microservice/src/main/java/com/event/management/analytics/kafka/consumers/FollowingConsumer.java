@@ -31,7 +31,8 @@ public class FollowingConsumer {
         Optional<Organizer> oOrganizer = organizersRepo.findById(organizerId);
         if (oOrganizer.isPresent() && oUser.isPresent()){
             Organizer organizer = oOrganizer.get();
-            organizer.addFollower(dateOfBirthToAge(oUser.get().getDateOfBirth()));
+            User user = oUser.get();
+            organizer.addFollower(dateOfBirthToAge(user.getDateOfBirth()), user.getGender());
             organizersRepo.update(organizer);
 
             System.out.println("Added a follower to Organizer with id " + organizerId);
@@ -44,7 +45,8 @@ public class FollowingConsumer {
         Optional<Organizer> oOrganizer = organizersRepo.findById(organizerId);
         if (oOrganizer.isPresent() && oUser.isPresent()){
             Organizer organizer = oOrganizer.get();
-            organizer.removeFollower(dateOfBirthToAge(oUser.get().getDateOfBirth()));
+            User user = oUser.get();
+            organizer.removeFollower(dateOfBirthToAge(user.getDateOfBirth()), user.getGender());
             organizersRepo.update(organizer);
 
             System.out.println("Added a follower to Organizer with id " + organizerId);

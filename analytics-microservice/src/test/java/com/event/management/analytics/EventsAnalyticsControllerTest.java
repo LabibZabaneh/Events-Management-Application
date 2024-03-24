@@ -284,6 +284,9 @@ public class EventsAnalyticsControllerTest {
         event.setName(name);
         event.setOrganizer(organizer);
         event.setRegistrations(0);
+        event.setMaleRegistrations(0);
+        event.setFemaleRegistrations(0);
+        event.setOtherRegistrations(0);
         event.setAverageAge(0);
         event.setAgeCounts(new ArrayList<>());
         return event;

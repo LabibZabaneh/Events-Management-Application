@@ -24,6 +24,15 @@ public class Organizer {
     @Column(nullable = false)
     private double averageAge;
 
+    @Column(nullable = false)
+    private int maleFollowers;
+
+    @Column(nullable = false)
+    private int femaleFollowers;
+
+    @Column(nullable = false)
+    private int otherFollowers;
+
     @JsonIgnore
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
@@ -63,30 +72,57 @@ public class Organizer {
         this.followers = followers;
     }
 
-    public void addFollower(int age){
+    public void addFollower(int age, Gender gender){
         for (OrganizerAgeCount ageCount : ageCounts){
             if (ageCount.getAge() == age){
                 ageCount.incrementCount();
+                incrementGenderCount(gender);
                 this.followers++;
                 return;
             }
         }
         ageCounts.add(new OrganizerAgeCount(this, age, 1));
         this.averageAge = (this.averageAge * (this.followers-1) + age) / this.followers;
+        incrementGenderCount(gender);
         this.followers++;
     }
 
-    public void removeFollower(int age){
-        if (this.followers > 0 && this.averageAge > 0){
+    public void removeFollower(int age, Gender gender){
+        if (this.followers>0 && this.averageAge>0 && maleFollowers>0 && femaleFollowers>0 && otherFollowers>0){
             for (OrganizerAgeCount ageCount : ageCounts){
                 if (ageCount.getAge() == age){
                     ageCount.decrementCount();
                     this.followers--;
+                    decrementGenderCount(gender);
                     this.averageAge = (this.averageAge * (this.followers+1) - age) / this.followers;
                     return;
                 }
             }
         }
+    }
+
+    public int getMaleFollowers() {
+        return maleFollowers;
+    }
+
+    public void setMaleFollowers(int maleFollowers) {
+        this.maleFollowers = maleFollowers;
+    }
+
+    public int getFemaleFollowers() {
+        return femaleFollowers;
+    }
+
+    public void setFemaleFollowers(int femaleFollowers) {
+        this.femaleFollowers = femaleFollowers;
+    }
+
+    public int getOtherFollowers() {
+        return otherFollowers;
+    }
+
+    public void setOtherFollowers(int otherFollowers) {
+        this.otherFollowers = otherFollowers;
     }
 
     public Set<Event> getPostedEvents() {
@@ -103,5 +139,31 @@ public class Organizer {
 
     public void setAgeCounts(List<OrganizerAgeCount> ageCounts) {
         this.ageCounts = ageCounts;
+    }
+
+    private void incrementGenderCount(Gender gender){
+        switch (gender) {
+            case MALE:
+                maleFollowers++;
+            case FEMALE:
+                femaleFollowers++;
+                break;
+            case OTHER:
+                otherFollowers++;
+                break;
+        }
+    }
+
+    private void decrementGenderCount(Gender gender){ // Checked for 0 values before calling the method
+        switch (gender) {
+            case MALE:
+                maleFollowers--;
+            case FEMALE:
+                femaleFollowers--;
+                break;
+            case OTHER:
+                otherFollowers--;
+                break;
+        }
     }
 }

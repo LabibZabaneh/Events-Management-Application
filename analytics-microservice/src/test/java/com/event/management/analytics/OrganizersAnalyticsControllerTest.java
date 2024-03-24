@@ -232,9 +232,9 @@ public class OrganizersAnalyticsControllerTest {
         final int age1 = 18;
         final int age2 = 21;
         Organizer organizer = createOrganizer(1L, "York Parties", 0);
-        organizer.addFollower(age1);
-        organizer.addFollower(age1);
-        organizer.addFollower(age2);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age2, Gender.MALE);
         organizersRepo.save(organizer);
 
         List<OrganizerAgeCount> organizerAgeCounts = client.getOrganizerFollowersAgeDistribution(organizer.getId());
@@ -265,9 +265,9 @@ public class OrganizersAnalyticsControllerTest {
         final int age1 = 18;
         final int age2 = 21;
         Organizer organizer = createOrganizer(1L, "York Parties", 0);
-        organizer.addFollower(age1);
-        organizer.addFollower(age1);
-        organizer.addFollower(age2);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age2, Gender.MALE);
         organizersRepo.save(organizer);
 
         double expectedAverageAge = (age1 * 2 + age2)/3;
@@ -297,12 +297,12 @@ public class OrganizersAnalyticsControllerTest {
         final int age2 = 21;
         final int age3 = 22;
         Organizer organizer = createOrganizer(1L, "York Parties", 0);
-        organizer.addFollower(age1);
-        organizer.addFollower(age1);
-        organizer.addFollower(age2);
-        organizer.addFollower(age3);
-        organizer.addFollower(age3);
-        organizer.addFollower(age3);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age1, Gender.MALE);
+        organizer.addFollower(age2, Gender.MALE);
+        organizer.addFollower(age3, Gender.MALE);
+        organizer.addFollower(age3, Gender.MALE);
+        organizer.addFollower(age3, Gender.MALE);
         organizersRepo.save(organizer);
 
         final int limit = 2;
@@ -326,6 +326,9 @@ public class OrganizersAnalyticsControllerTest {
         organizer.setName(name);
         organizer.setFollowers(followers);
         organizer.setAverageAge(0.0);
+        organizer.setMaleFollowers(0);
+        organizer.setFemaleFollowers(0);
+        organizer.setOtherFollowers(0);
         organizer.setPostedEvents(new HashSet<>());
         organizer.setAgeCounts(new ArrayList<>());
         return organizer;

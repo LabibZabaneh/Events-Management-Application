@@ -31,6 +31,9 @@ public class OrganizersConsumer {
             organizer.setFollowers(0);
             organizer.setPostedEvents(new HashSet<>());
             organizer.setAverageAge(0.0);
+            organizer.setMaleFollowers(0);
+            organizer.setFemaleFollowers(0);
+            organizer.setOtherFollowers(0);
             organizer.setAgeCounts(new ArrayList<>());
             repo.save(organizer);
             System.out.println("Organizer created with id " + id);
