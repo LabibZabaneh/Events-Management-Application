@@ -1,9 +1,6 @@
 package com.event.management.analytics.controllers;
 
-import com.event.management.analytics.domain.Event;
-import com.event.management.analytics.domain.EventAgeCount;
-import com.event.management.analytics.domain.Organizer;
-import com.event.management.analytics.domain.OrganizerAgeCount;
+import com.event.management.analytics.domain.*;
 import com.event.management.analytics.repositories.OrganizersRepository;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -93,14 +90,4 @@ public class OrganizersAnalyticsController {
         return oOrganizer.get().getAverageAge();
     }
 
-    @Get("/organizers/{id}/followers-top-age-groups/{limit}")
-    public List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroups(long id, int limit){
-        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
-        if (oOrganizer.isEmpty()){
-            return Collections.emptyList();
-        }
-        List<OrganizerAgeCount> ageCounts = oOrganizer.get().getAgeCounts();
-        ageCounts.sort((a1, a2) -> a2.getCount() - a1.getCount());
-        return ageCounts.subList(0, Math.min(limit, ageCounts.size()));
-    }
 }

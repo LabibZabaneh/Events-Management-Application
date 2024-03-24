@@ -12,22 +12,20 @@ public class Event {
 
     @Id
     private Long id;
-
     @Column(nullable = false)
     private String name;
-
     @ManyToOne
     @JoinColumn(name="organizer_id", nullable = false)
     private Organizer organizer;
-
     @Column(nullable = false)
     private int registrations;
-
     @Column(nullable = false)
     private double averageAge;
-
+    @Column(nullable = false)
     private int maleRegistrations;
+    @Column(nullable = false)
     private int femaleRegistrations;
+    @Column(nullable = false)
     private int otherRegistrations;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)

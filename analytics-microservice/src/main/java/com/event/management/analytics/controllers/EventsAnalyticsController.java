@@ -2,6 +2,7 @@ package com.event.management.analytics.controllers;
 
 import com.event.management.analytics.domain.EventAgeCount;
 import com.event.management.analytics.domain.Event;
+import com.event.management.analytics.domain.Gender;
 import com.event.management.analytics.repositories.EventsRepository;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -54,6 +55,46 @@ public class EventsAnalyticsController {
     @Get("/popular/events")
     public List<Event> getPopularEvents(){
         return eventsRepo.findTop10ByOrderByRegistrationsDesc();
+    }
+
+    @Get("/events/{id}/gender-distribution")
+    public Map<Gender, Integer> getEventGenderDistribution(long id){
+        Optional<Event> oEvent = eventsRepo.findById(id);
+        if (oEvent.isEmpty()){
+            return Collections.emptyMap();
+        }
+        Event event = oEvent.get();
+
+        Map<Gender, Integer> genderDistribution = new HashMap<>();
+        genderDistribution.put(Gender.MALE, event.getMaleRegistrations());
+        genderDistribution.put(Gender.FEMALE, event.getFemaleRegistrations());
+        genderDistribution.put(Gender.OTHER, event.getOtherRegistrations());
+
+        return genderDistribution;
+    }
+
+    @Get("/events/{id}/gender-ratio")
+    public Map<Gender, Double> getEventGenderRatios(long id){
+        Optional<Event> oEvent = eventsRepo.findById(id);
+        if (oEvent.isEmpty()){
+            return Collections.emptyMap();
+        }
+
+        Event event = oEvent.get();
+        int totalRegistrations = event.getRegistrations();
+        Map<Gender, Double> genderRatio = new HashMap<>();
+
+        if (totalRegistrations == 0) {
+            genderRatio.put(Gender.MALE, 0.0);
+            genderRatio.put(Gender.FEMALE, 0.0);
+            genderRatio.put(Gender.OTHER, 0.0);
+        } else {
+            genderRatio.put(Gender.MALE, ((double) event.getMaleRegistrations() / totalRegistrations) * 100);
+            genderRatio.put(Gender.FEMALE, ((double) event.getFemaleRegistrations() / totalRegistrations) * 100);
+            genderRatio.put(Gender.OTHER, ((double) event.getOtherRegistrations() / totalRegistrations) * 100);
+        }
+
+        return genderRatio;
     }
 
 }
