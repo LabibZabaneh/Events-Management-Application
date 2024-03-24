@@ -26,8 +26,13 @@ public class Event {
     @Column(nullable = false)
     private double averageAge;
 
+    private int maleRegistrations;
+    private int femaleRegistrations;
+    private int otherRegistrations;
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventAgeCount> ageCounts = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -53,29 +58,67 @@ public class Event {
         this.registrations = registrations;
     }
 
-    public void addRegistration(int age){
+    public void addRegistration(int age, Gender gender){
+        boolean found = false;
         for (EventAgeCount ageCount : ageCounts){
             if (ageCount.getAge() == age){
                 ageCount.incrementCount();
-                this.registrations++;
-                return;
+                found = true;
+                break;
             }
         }
-        ageCounts.add(new EventAgeCount(this, age, 1));
+        if (!found) {
+            ageCounts.add(new EventAgeCount(this, age, 1));
+        }
         this.registrations++;
+        incrementGenderCount(gender);
         this.averageAge = (this.averageAge * (this.registrations-1) + age) / this.registrations;
     }
 
-    public void deleteRegistration(int age){
-        if (this.registrations > 0 && this.averageAge > 0){
-            for (EventAgeCount ageCount : ageCounts){
-                if (ageCount.getAge() == age){
-                    ageCount.decrementCount();
-                    this.registrations--;
-                    this.averageAge = (this.averageAge * (registrations+1) - age) / this.registrations;
-                    return;
+    public void deleteRegistration(int age, Gender gender) {
+        if (this.registrations<=0 || this.averageAge<=0 || maleRegistrations<=0 || femaleRegistrations<=0 || otherRegistrations<=0) {
+            return;
+        }
+
+        for (EventAgeCount ageCount : ageCounts) {
+            if (ageCount.getAge() == age) {
+                ageCount.decrementCount();
+                this.registrations--;
+                decrementGenderCount(gender);
+                // Update average age
+                if (this.registrations > 0) {
+                    this.averageAge = ((this.averageAge * (this.registrations + 1)) - age) / this.registrations;
+                } else {
+                    this.averageAge = 0; // Reset average age if no registrations
                 }
+                return;
             }
+        }
+    }
+
+    private void incrementGenderCount(Gender gender){
+        switch (gender) {
+            case MALE:
+                maleRegistrations++;
+            case FEMALE:
+                femaleRegistrations++;
+                break;
+            case OTHER:
+                otherRegistrations++;
+                break;
+        }
+    }
+
+    private void decrementGenderCount(Gender gender){ // Checked for 0 values before calling the method
+        switch (gender) {
+            case MALE:
+                maleRegistrations--;
+            case FEMALE:
+                femaleRegistrations--;
+                break;
+            case OTHER:
+                otherRegistrations--;
+                break;
         }
     }
 
@@ -99,10 +142,31 @@ public class Event {
         return averageAge;
     }
 
-    public void setAverageAge(int averageAge){
-        this.averageAge = 0;
-        if (averageAge > 0) {
-            this.averageAge = averageAge;
-        }
+    public void setAverageAge(double averageAge) {
+        this.averageAge = averageAge;
+    }
+
+    public int getMaleRegistrations() {
+        return maleRegistrations;
+    }
+
+    public void setMaleRegistrations(int maleRegistrations) {
+        this.maleRegistrations = maleRegistrations;
+    }
+
+    public int getFemaleRegistrations() {
+        return femaleRegistrations;
+    }
+
+    public void setFemaleRegistrations(int femaleRegistrations) {
+        this.femaleRegistrations = femaleRegistrations;
+    }
+
+    public int getOtherRegistrations() {
+        return otherRegistrations;
+    }
+
+    public void setOtherRegistrations(int otherRegistrations) {
+        this.otherRegistrations = otherRegistrations;
     }
 }

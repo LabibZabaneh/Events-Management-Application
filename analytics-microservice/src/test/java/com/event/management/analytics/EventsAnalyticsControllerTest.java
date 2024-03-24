@@ -2,6 +2,7 @@ package com.event.management.analytics;
 
 import com.event.management.analytics.domain.Event;
 import com.event.management.analytics.domain.EventAgeCount;
+import com.event.management.analytics.domain.Gender;
 import com.event.management.analytics.domain.Organizer;
 import com.event.management.analytics.repositories.EventsRepository;
 import com.event.management.analytics.repositories.OrganizersRepository;
@@ -79,9 +80,9 @@ public class EventsAnalyticsControllerTest {
         final int age2 = 21;
 
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
-        event.addRegistration(age1);
-        event.addRegistration(age2);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         List<EventAgeCount> ageCounts = client.getEventAgeDistribution(event.getId());
@@ -116,9 +117,9 @@ public class EventsAnalyticsControllerTest {
         final int age1 = 18;
         final int age2 = 21;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
-        event.addRegistration(age1);
-        event.addRegistration(age2);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         final double expectedAverageAge = (age1 * 2 + age2) / 3;
@@ -149,8 +150,8 @@ public class EventsAnalyticsControllerTest {
         final int age1 = 18;
         final int age2 = 21;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
-        event.addRegistration(age2);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         assertTrue(client.getEventTopAgeGroups(event.getId(), -1).isEmpty(), "Should return an empty list on a negative limit");
@@ -165,12 +166,12 @@ public class EventsAnalyticsControllerTest {
         final int age2 = 21;
         final int age3 = 22;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
-        event.addRegistration(age1);
-        event.addRegistration(age1);
-        event.addRegistration(age2);
-        event.addRegistration(age2);
-        event.addRegistration(age3);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age1, Gender.MALE);
+        event.addRegistration(age2, Gender.MALE);
+        event.addRegistration(age2, Gender.MALE);
+        event.addRegistration(age3, Gender.MALE);
         eventsRepo.save(event);
 
         List<EventAgeCount> ageCounts = client.getEventTopAgeGroups(event.getId(), 2);
@@ -188,7 +189,7 @@ public class EventsAnalyticsControllerTest {
 
         final int age1 = 18;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
+        event.addRegistration(age1, Gender.MALE);
         eventsRepo.save(event);
 
         List<EventAgeCount> ageCounts = client.getEventTopAgeGroups(event.getId(), 2);

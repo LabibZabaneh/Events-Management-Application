@@ -1,9 +1,6 @@
 package com.event.management.analytics;
 
-import com.event.management.analytics.domain.Event;
-import com.event.management.analytics.domain.EventAgeCount;
-import com.event.management.analytics.domain.Organizer;
-import com.event.management.analytics.domain.OrganizerAgeCount;
+import com.event.management.analytics.domain.*;
 import com.event.management.analytics.repositories.EventsRepository;
 import com.event.management.analytics.repositories.OrganizersRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -148,16 +145,16 @@ public class OrganizersAnalyticsControllerTest {
 
         final int age1 = 20;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
+        event.addRegistration(age1, Gender.MALE);
         eventsRepo.save(event);
 
         final int age2 = 22;
         Event event2 = createEvent(2L, "Freshers 2", organizer);
-        event.addRegistration(age2);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         Event event3 = createEvent(3L, "Freshers 3", organizer);
-        event.addRegistration(age2);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         organizer.getPostedEvents().add(event);
@@ -193,16 +190,16 @@ public class OrganizersAnalyticsControllerTest {
 
         final int age1 = 19;
         Event event = createEvent(1L, "Freshers", organizer);
-        event.addRegistration(age1);
+        event.addRegistration(age1, Gender.MALE);
         eventsRepo.save(event);
 
         final int age2 = 22;
         Event event2 = createEvent(2L, "Freshers 2", organizer);
-        event.addRegistration(age2);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         Event event3 = createEvent(3L, "Freshers 3", organizer);
-        event.addRegistration(age2);
+        event.addRegistration(age2, Gender.MALE);
         eventsRepo.save(event);
 
         organizer.getPostedEvents().add(event);

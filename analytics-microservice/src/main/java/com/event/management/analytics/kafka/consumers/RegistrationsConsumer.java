@@ -35,7 +35,7 @@ public class RegistrationsConsumer {
             usersRepo.update(user);
 
             Event event = oEvent.get();
-            event.addRegistration(dateOfBirthToAge(user.getDateOfBirth()));
+            event.addRegistration(dateOfBirthToAge(user.getDateOfBirth()), user.getGender());
             eventsRepo.update(event);
 
             System.out.println("User with id " + userId + "registered to event with id " + eventId);
@@ -52,7 +52,7 @@ public class RegistrationsConsumer {
             usersRepo.update(user);
 
             Event event = oEvent.get();
-            event.deleteRegistration(dateOfBirthToAge(user.getDateOfBirth()));
+            event.deleteRegistration(dateOfBirthToAge(user.getDateOfBirth()), user.getGender());
             eventsRepo.update(event);
 
             System.out.println("User with id " + userId + "unregistered to event with id " + eventId);

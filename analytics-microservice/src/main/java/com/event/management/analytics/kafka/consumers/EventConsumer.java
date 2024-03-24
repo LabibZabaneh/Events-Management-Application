@@ -33,6 +33,10 @@ public class EventConsumer {
             event.setName(dto.getName());
             event.setOrganizer(organizersRepo.findById(dto.getOrganizerId()).get());
             event.setRegistrations(0);
+            event.setAverageAge(0);
+            event.setMaleRegistrations(0);
+            event.setFemaleRegistrations(0);
+            event.setOtherRegistrations(0);
             event.setAgeCounts(new ArrayList<>());
             repo.save(event);
             System.out.println("Event posted with id " + id);
