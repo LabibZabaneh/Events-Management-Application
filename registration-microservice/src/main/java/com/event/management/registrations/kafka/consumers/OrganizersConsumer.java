@@ -16,7 +16,10 @@ public class OrganizersConsumer {
     @Inject
     OrganizersRepository organizersRepo;
 
-    @Topic("organizer-created")
+    final String ORGANIZER_CREATED_TOPIC = "organizer-created";
+    final String ORGANIZER_DELETED_TOPIC = "organizer-deleted";
+
+    @Topic(ORGANIZER_CREATED_TOPIC)
     public void createdOrganizer(@KafkaKey Long id, OrganizerDTO dto){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
@@ -26,6 +29,16 @@ public class OrganizersConsumer {
             organizersRepo.save(organizer);
 
             System.out.println("Organizer added with id" + id);
+        }
+    }
+
+    @Topic(ORGANIZER_DELETED_TOPIC)
+    public void deletedOrganizer(@KafkaKey Long id, OrganizerDTO dto){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isPresent()){
+            organizersRepo.deleteById(id);
+
+            System.out.println("Organizer deleted with id " + id);
         }
     }
 

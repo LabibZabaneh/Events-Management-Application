@@ -15,6 +15,7 @@ import java.util.Optional;
 public class EventsConsumer {
 
     final String EVENT_POSTED_TOPIC = "event-posted";
+    final String EVENT_DELETED_TOPIC = "event-deleted";
 
     @Inject
     EventsRepository eventsRepo;
@@ -30,6 +31,16 @@ public class EventsConsumer {
             eventsRepo.save(event);
 
             System.out.println("Event added with id" + id);
+        }
+    }
+
+    @Topic(EVENT_DELETED_TOPIC)
+    public void deletedEvent(@KafkaKey Long id, EventDTO dto){
+        Optional<Event> oEvent = eventsRepo.findById(id);
+        if (oEvent.isPresent()){
+            eventsRepo.deleteById(id);
+
+            System.out.println("Event deleted with id" + id);
         }
     }
 }
