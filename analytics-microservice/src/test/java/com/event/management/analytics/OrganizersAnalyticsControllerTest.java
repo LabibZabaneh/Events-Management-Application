@@ -324,7 +324,11 @@ public class OrganizersAnalyticsControllerTest {
         Organizer organizer = createOrganizer(1L, "York Parties", 0);
         organizersRepo.save(organizer);
 
-        assertTrue(client.getOrganizerFollowersGenderDistribution(organizer.getId()).isEmpty(), "Should return an empty map");
+        Map<Gender, Integer> genderDistribution = client.getOrganizerFollowersGenderDistribution(organizer.getId());
+        assertEquals(3, genderDistribution.size(), "Should have 3 genders");
+        assertEquals(0, genderDistribution.get(Gender.MALE), "Should have value of 0 for Male");
+        assertEquals(0, genderDistribution.get(Gender.FEMALE), "Should have value of 0 for Female");
+        assertEquals(0, genderDistribution.get(Gender.OTHER), "Should have value of 0 for Other");
     }
 
     @Test
@@ -337,7 +341,7 @@ public class OrganizersAnalyticsControllerTest {
         organizersRepo.save(organizer);
 
         Map<Gender, Integer> genderDistribution = client.getOrganizerFollowersGenderDistribution(organizer.getId());
-        assertEquals(3, genderDistribution.size(), "Should have 3 genders as keys");
+        assertEquals(3, genderDistribution.size(), "Should have 3 genders");
         assertEquals(2, genderDistribution.get(Gender.MALE), "Should have MALE gender count as 2");
         assertEquals(1, genderDistribution.get(Gender.FEMALE), "Should have FEMALE gender count as 1");
         assertEquals(1, genderDistribution.get(Gender.OTHER), "Should have OTHER gender count as 1");
@@ -353,7 +357,11 @@ public class OrganizersAnalyticsControllerTest {
         Organizer organizer = createOrganizer(1L, "York Parties", 0);
         organizersRepo.save(organizer);
 
-        assertTrue(client.getOrganizerFollowersGenderRatio(organizer.getId()).isEmpty(), "Should return an empty map");
+        Map<Gender, Double> genderRatio = client.getOrganizerFollowersGenderRatio(organizer.getId());
+        assertEquals(3, genderRatio.size(), "Should have 3 genders");
+        assertEquals(0.0, genderRatio.get(Gender.MALE), "Should have value of 0.0 for Male");
+        assertEquals(0.0, genderRatio.get(Gender.FEMALE), "Should have value of 0.0 for female");
+        assertEquals(0.0, genderRatio.get(Gender.OTHER), "Should have value of 0.0 for Other");
     }
 
     @Test
@@ -371,6 +379,102 @@ public class OrganizersAnalyticsControllerTest {
         assertEquals(60.0, genderRatio.get(Gender.MALE), "Should have MALE gender ratio as 60.0");
         assertEquals(20.0, genderRatio.get(Gender.FEMALE), "Should have FEMALE gender ratio as 20.0");
         assertEquals(20.0, genderRatio.get(Gender.OTHER), "Should have OTHER gender ratio as 20.0");
+    }
+
+    @Test
+    public void invalidOrganizerEventsGenderDistribution(){
+        assertTrue(client.getOrganizerRegistrationsGenderDistribution(0L).isEmpty(), "Should return an empty map for an invalid user");
+    }
+
+    @Test
+    public void noOrganizerEventsGenderDistribution(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        Map<Gender, Integer> genderDistribution = client.getOrganizerRegistrationsGenderDistribution(organizer.getId());
+        assertEquals(3, genderDistribution.size(), "Should have 3 genders");
+        assertEquals(0, genderDistribution.get(Gender.MALE), "Should have a count of 0 for Male");
+        assertEquals(0, genderDistribution.get(Gender.FEMALE), "Should have a count of 0 for Female");
+        assertEquals(0, genderDistribution.get(Gender.OTHER), "Should have a count of 0 for Other");
+    }
+
+    @Test
+    public void organizerEventsGenderDistribution(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        Event event = createEvent(1L, "Freshers", organizer);
+        event.addRegistration(18, Gender.MALE);
+        event.addRegistration(18, Gender.MALE);
+        event.addRegistration(18, Gender.MALE);
+        eventsRepo.save(event);
+
+        Event event2 = createEvent(2L, "Freshers 2", organizer);
+        event.addRegistration(18, Gender.FEMALE);
+        eventsRepo.save(event);
+
+        Event event3 = createEvent(3L, "Freshers 3", organizer);
+        event.addRegistration(18, Gender.OTHER);
+        eventsRepo.save(event);
+
+        organizer.getPostedEvents().add(event);
+        organizer.getPostedEvents().add(event2);
+        organizer.getPostedEvents().add(event3);
+        organizersRepo.update(organizer);
+
+        Map<Gender, Integer> genderDistribution = client.getOrganizerRegistrationsGenderDistribution(organizer.getId());
+        assertEquals(3, genderDistribution.size(), "Should have 3 genders");
+        assertEquals(3, genderDistribution.get(Gender.MALE), "Should have a count of 3 for Male");
+        assertEquals(1, genderDistribution.get(Gender.FEMALE), "Should have a count of 1 for Female");
+        assertEquals(1, genderDistribution.get(Gender.OTHER), "Should have a count of 1 for Other");
+    }
+
+    @Test
+    public void invalidOrganizerEventsGenderRatio(){
+        assertTrue(client.getOrganizerRegistrationsGenderRatio(0L).isEmpty(), "Should return an empty map for an invalid organizer");
+    }
+
+    @Test
+    public void noOrganizerEventsGenderRatio(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        Map<Gender, Double> genderRatio = client.getOrganizerRegistrationsGenderRatio(organizer.getId());
+        assertEquals(3, genderRatio.size(), "Should have 3 genders");
+        assertEquals(0, genderRatio.get(Gender.MALE), "Should have a count of 0 for Male");
+        assertEquals(0, genderRatio.get(Gender.FEMALE), "Should have a count of 0 for Female");
+        assertEquals(0, genderRatio.get(Gender.OTHER), "Should have a count of 0 for Other");
+    }
+
+    @Test
+    public void organizerEventsGenderRatio(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        Event event = createEvent(1L, "Freshers", organizer);
+        event.addRegistration(18, Gender.MALE);
+        event.addRegistration(18, Gender.MALE);
+        event.addRegistration(18, Gender.MALE);
+        eventsRepo.save(event);
+
+        Event event2 = createEvent(2L, "Freshers 2", organizer);
+        event.addRegistration(18, Gender.FEMALE);
+        eventsRepo.save(event);
+
+        Event event3 = createEvent(3L, "Freshers 3", organizer);
+        event.addRegistration(18, Gender.OTHER);
+        eventsRepo.save(event);
+
+        organizer.getPostedEvents().add(event);
+        organizer.getPostedEvents().add(event2);
+        organizer.getPostedEvents().add(event3);
+        organizersRepo.update(organizer);
+
+        Map<Gender, Double> genderRatio = client.getOrganizerRegistrationsGenderRatio(organizer.getId());
+        assertEquals(3, genderRatio.size(), "Should have 3 genders");
+        assertEquals(60.0, genderRatio.get(Gender.MALE), "Should have a ratio of 60.0 for Male");
+        assertEquals(20.0, genderRatio.get(Gender.FEMALE), "Should have a ratio of 20.0 for Female");
+        assertEquals(20.0, genderRatio.get(Gender.OTHER), "Should have a ratio of 20.0 for Other");
     }
 
     protected static <T> List<T> iterableToList(Iterable<T> iterable) {

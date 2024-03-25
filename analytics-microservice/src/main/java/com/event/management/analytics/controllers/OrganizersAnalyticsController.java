@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller("/analytics")
 public class OrganizersAnalyticsController {
@@ -33,6 +34,55 @@ public class OrganizersAnalyticsController {
             return null;
         }
         return organizersRepo.findTopRegisteredEventsByOrganizerId(id, 10);
+    }
+
+    @Get("/organizers/{id}/followers-age-distribution")
+    public List<OrganizerAgeCount> getOrganizerFollowersAgeDistribution(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return new ArrayList<>();
+        }
+        return oOrganizer.get().getAgeCounts();
+    }
+
+    @Get("/organizers/{id}/followers-average-age")
+    public double getOrganizerFollowersAverageAge(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        return oOrganizer.map(Organizer::getAverageAge).orElse(0.0);
+    }
+
+    @Get("/organizers/{id}/followers-gender-distribution")
+    public Map<Gender, Integer> getOrganizerFollowersGenderDistribution(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return Collections.emptyMap();
+        }
+
+        Organizer organizer = oOrganizer.get();
+        Map<Gender, Integer> genderDistribution = new HashMap<>();
+        genderDistribution.put(Gender.MALE, organizer.getMaleFollowers());
+        genderDistribution.put(Gender.FEMALE, organizer.getFemaleFollowers());
+        genderDistribution.put(Gender.OTHER, organizer.getOtherFollowers());
+
+        return genderDistribution;
+    }
+
+    @Get("/organizer/{id}/followers-gender-ratio")
+    public Map<Gender, Double> getOrganizerFollowersGenderRatio(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return Collections.emptyMap();
+        }
+
+        Organizer organizer = oOrganizer.get();
+        Map<Gender, Double> genderRatio= new HashMap<>();
+        int totalFollowers = organizer.getFollowers();
+
+        genderRatio.put(Gender.MALE, (double) (organizer.getMaleFollowers()/totalFollowers)*100);
+        genderRatio.put(Gender.FEMALE, (double) (organizer.getFemaleFollowers()/totalFollowers)*100);
+        genderRatio.put(Gender.OTHER, (double) (organizer.getOtherFollowers()/totalFollowers)*100);
+
+        return genderRatio;
     }
 
     @Get("/organizers/{id}/registrations-age-distribution")
@@ -72,56 +122,47 @@ public class OrganizersAnalyticsController {
         return totalAge/totalRegistrations;
     }
 
-    @Get("/organizers/{id}/followers-age-distribution")
-    public List<OrganizerAgeCount> getOrganizerFollowersAgeDistribution(long id){
-        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
-        if (oOrganizer.isEmpty()){
-            return new ArrayList<>();
-        }
-        return oOrganizer.get().getAgeCounts();
-    }
-
-    @Get("/organizers/{id}/followers-average-age")
-    public double getOrganizerFollowersAverageAge(long id){
-        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
-        if (oOrganizer.isEmpty()){
-            return 0.0;
-        }
-        return oOrganizer.get().getAverageAge();
-    }
-
-    @Get("/organizers/{id}/followers-gender-distribution")
-    public Map<Gender, Integer> getOrganizerFollowersGenderDistribution(long id){
+    @Get("/organizers/{id}/registrations-gender-distribution")
+    public Map<Gender, Integer> getOrganizerRegistrationsGenderDistribution(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return Collections.emptyMap();
         }
-
-        Organizer organizer = oOrganizer.get();
-        Map<Gender, Integer> genderDistribution = new HashMap<>();
-        genderDistribution.put(Gender.MALE, organizer.getMaleFollowers());
-        genderDistribution.put(Gender.FEMALE, organizer.getFemaleFollowers());
-        genderDistribution.put(Gender.OTHER, organizer.getOtherFollowers());
-
-        return genderDistribution;
+        return getPostedEventsGenderCount(oOrganizer.get().getPostedEvents());
     }
 
-    @Get("/organizer/{id}/followers-gender-ratio")
-    public Map<Gender, Double> getOrganizerFollowersGenderRatio(long id){
+    @Get("/organizers/{id}/registrations-gender-ratio")
+    public Map<Gender, Double> getOrganizerRegistrationsGenderRatio(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
             return Collections.emptyMap();
         }
-
         Organizer organizer = oOrganizer.get();
-        Map<Gender, Double> genderRatio= new HashMap<>();
-        int totalFollowers = organizer.getFollowers();
-
-        genderRatio.put(Gender.MALE, (double) (organizer.getMaleFollowers()/totalFollowers)*100);
-        genderRatio.put(Gender.FEMALE, (double) (organizer.getFemaleFollowers()/totalFollowers)*100);
-        genderRatio.put(Gender.OTHER, (double) (organizer.getOtherFollowers()/totalFollowers)*100);
-
+        Map<Gender, Integer> genderCount = getPostedEventsGenderCount(organizer.getPostedEvents());
+        int totalGenderCount = genderCount.values().stream().mapToInt(Integer::intValue).sum();
+        if (totalGenderCount == 0){
+            // convert genderCount's values to double from Integer, they are already set to zero
+            return genderCount.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> (double) entry.getValue()));
+        }
+        Map<Gender, Double> genderRatio = genderCount.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> (double) (entry.getValue() / totalGenderCount)*100
+                ));
         return genderRatio;
     }
 
+    private Map<Gender, Integer> getPostedEventsGenderCount(Set<Event> events){
+        int totalMaleCount = 0, totalFemaleCount = 0, totalOtherCount = 0;
+        for (Event event : events){
+            totalMaleCount += event.getMaleRegistrations();
+            totalFemaleCount += event.getFemaleRegistrations();
+            totalOtherCount += event.getOtherRegistrations();
+        }
+        Map<Gender, Integer> genderCount = new HashMap<>();
+        genderCount.put(Gender.MALE, totalMaleCount);
+        genderCount.put(Gender.FEMALE, totalFemaleCount);
+        genderCount.put(Gender.OTHER, totalOtherCount);
+        return genderCount;
+    }
 }

@@ -43,4 +43,10 @@ public interface OrgainzersAnalyticsClient {
     @Get("/organizer/{id}/followers-gender-ratio")
     Map<Gender, Double> getOrganizerFollowersGenderRatio(long id);
 
+    @Get("/organizers/{id}/registrations-gender-distribution")
+    Map<Gender, Integer> getOrganizerRegistrationsGenderDistribution(long id);
+
+    @Get("/organizers/{id}/registrations-gender-ratio")
+    Map<Gender, Double> getOrganizerRegistrationsGenderRatio(long id);
+
 }
