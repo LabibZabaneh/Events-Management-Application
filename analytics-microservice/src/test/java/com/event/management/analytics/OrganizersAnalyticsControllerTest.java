@@ -314,6 +314,65 @@ public class OrganizersAnalyticsControllerTest {
         assertEquals(2, topAgeGroups.get(1).getCount(), "Age1 count should be 2");
     }
 
+    @Test
+    public void invalidOrganizerFollowersGenderDistribution(){
+        assertTrue(client.getOrganizerFollowersGenderDistribution(0L).isEmpty(), "Should return an empty map for an invalid organizer");
+    }
+
+    @Test
+    public void noOrganizerFollowersGenderDistribution(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        assertTrue(client.getOrganizerFollowersGenderDistribution(organizer.getId()).isEmpty(), "Should return an empty map");
+    }
+
+    @Test
+    public void organizerFollowersGenderDistribution(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizer.addFollower(18, Gender.MALE);
+        organizer.addFollower(18, Gender.MALE);
+        organizer.addFollower(18, Gender.FEMALE);
+        organizer.addFollower(18, Gender.OTHER);
+        organizersRepo.save(organizer);
+
+        Map<Gender, Integer> genderDistribution = client.getOrganizerFollowersGenderDistribution(organizer.getId());
+        assertEquals(3, genderDistribution.size(), "Should have 3 genders as keys");
+        assertEquals(2, genderDistribution.get(Gender.MALE), "Should have MALE gender count as 2");
+        assertEquals(1, genderDistribution.get(Gender.FEMALE), "Should have FEMALE gender count as 1");
+        assertEquals(1, genderDistribution.get(Gender.OTHER), "Should have OTHER gender count as 1");
+    }
+
+    @Test
+    public void invalidOrganizerFollowersGenderRatio(){
+        assertTrue(client.getOrganizerFollowersGenderRatio(0L).isEmpty(), "Should return an empty map for an invalid organizer");
+    }
+
+    @Test
+    public void noOrganizerFollowersGenderRatio(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizersRepo.save(organizer);
+
+        assertTrue(client.getOrganizerFollowersGenderRatio(organizer.getId()).isEmpty(), "Should return an empty map");
+    }
+
+    @Test
+    public void organizerFollowersGenderRatio(){
+        Organizer organizer = createOrganizer(1L, "York Parties", 0);
+        organizer.addFollower(18, Gender.MALE);
+        organizer.addFollower(18, Gender.MALE);
+        organizer.addFollower(18, Gender.MALE);
+        organizer.addFollower(18, Gender.FEMALE);
+        organizer.addFollower(18, Gender.OTHER);
+        organizersRepo.save(organizer);
+
+        Map<Gender, Double> genderRatio = client.getOrganizerFollowersGenderRatio(organizer.getId());
+        assertEquals(3, genderRatio.size(), "Should have 3 genders as keys");
+        assertEquals(60.0, genderRatio.get(Gender.MALE), "Should have MALE gender ratio as 60.0");
+        assertEquals(20.0, genderRatio.get(Gender.FEMALE), "Should have FEMALE gender ratio as 20.0");
+        assertEquals(20.0, genderRatio.get(Gender.OTHER), "Should have OTHER gender ratio as 20.0");
+    }
+
     protected static <T> List<T> iterableToList(Iterable<T> iterable) {
         List<T> l = new ArrayList<>();
         iterable.forEach(l::add);
@@ -333,5 +392,4 @@ public class OrganizersAnalyticsControllerTest {
         organizer.setAgeCounts(new ArrayList<>());
         return organizer;
     }
-
 }

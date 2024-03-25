@@ -1,6 +1,7 @@
 package com.event.management.analytics;
 
 import com.event.management.analytics.domain.Event;
+import com.event.management.analytics.domain.Gender;
 import com.event.management.analytics.domain.Organizer;
 import com.event.management.analytics.domain.OrganizerAgeCount;
 import io.micronaut.http.annotation.Get;
@@ -35,5 +36,11 @@ public interface OrgainzersAnalyticsClient {
 
     @Get("/organizers/{id}/followers-top-age-groups/{limit}")
     List<OrganizerAgeCount> getOrganizerFollowersTopAgeGroups(long id, int limit);
+
+    @Get("/organizers/{id}/followers-gender-distribution")
+    Map<Gender, Integer> getOrganizerFollowersGenderDistribution(long id);
+
+    @Get("/organizer/{id}/followers-gender-ratio")
+    Map<Gender, Double> getOrganizerFollowersGenderRatio(long id);
 
 }

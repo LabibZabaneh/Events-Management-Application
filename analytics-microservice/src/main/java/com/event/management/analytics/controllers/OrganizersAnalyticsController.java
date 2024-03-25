@@ -90,4 +90,38 @@ public class OrganizersAnalyticsController {
         return oOrganizer.get().getAverageAge();
     }
 
+    @Get("/organizers/{id}/followers-gender-distribution")
+    public Map<Gender, Integer> getOrganizerFollowersGenderDistribution(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return Collections.emptyMap();
+        }
+
+        Organizer organizer = oOrganizer.get();
+        Map<Gender, Integer> genderDistribution = new HashMap<>();
+        genderDistribution.put(Gender.MALE, organizer.getMaleFollowers());
+        genderDistribution.put(Gender.FEMALE, organizer.getFemaleFollowers());
+        genderDistribution.put(Gender.OTHER, organizer.getOtherFollowers());
+
+        return genderDistribution;
+    }
+
+    @Get("/organizer/{id}/followers-gender-ratio")
+    public Map<Gender, Double> getOrganizerFollowersGenderRatio(long id){
+        Optional<Organizer> oOrganizer = organizersRepo.findById(id);
+        if (oOrganizer.isEmpty()){
+            return Collections.emptyMap();
+        }
+
+        Organizer organizer = oOrganizer.get();
+        Map<Gender, Double> genderRatio= new HashMap<>();
+        int totalFollowers = organizer.getFollowers();
+
+        genderRatio.put(Gender.MALE, (double) (organizer.getMaleFollowers()/totalFollowers)*100);
+        genderRatio.put(Gender.FEMALE, (double) (organizer.getFemaleFollowers()/totalFollowers)*100);
+        genderRatio.put(Gender.OTHER, (double) (organizer.getOtherFollowers()/totalFollowers)*100);
+
+        return genderRatio;
+    }
+
 }
