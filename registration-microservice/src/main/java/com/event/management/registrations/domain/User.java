@@ -24,7 +24,7 @@ public class User {
     private Set<Event> registeredEvents;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "followers")
+    @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
     private Set<Organizer> followedOrganizers;
 
     public Long getId() {

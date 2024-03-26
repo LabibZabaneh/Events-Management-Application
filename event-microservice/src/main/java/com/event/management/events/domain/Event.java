@@ -1,10 +1,12 @@
 package com.event.management.events.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Serdeable
 @Entity
@@ -29,6 +31,10 @@ public class Event {
 
     @Column(nullable = false)
     private LocalTime time;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TicketCategory> ticketCategories;
 
     public Long getId() {
         return id;
@@ -76,5 +82,13 @@ public class Event {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public Set<TicketCategory> getTicketCategories() {
+        return ticketCategories;
+    }
+
+    public void setTicketCategories(Set<TicketCategory> ticketCategories) {
+        this.ticketCategories = ticketCategories;
     }
 }
