@@ -1,5 +1,6 @@
 package com.event.management.events.dto;
 
+import com.event.management.events.domain.TicketCategory;
 import io.micronaut.serde.annotation.Serdeable;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public class EventDTO {
     private String venue;
     private LocalDate date;
     private LocalTime time;
-    private List<TicketCategoryDTO> ticketCategories;
+    private List<TicketCategory> ticketCategories;
 
     public String getEventName() {
         return eventName;
@@ -56,11 +57,11 @@ public class EventDTO {
         this.time = time;
     }
 
-    public List<TicketCategoryDTO> getTicketCategories() {
+    public List<TicketCategory> getTicketCategories() {
         return ticketCategories;
     }
 
-    public void setTicketCategories(List<TicketCategoryDTO> ticketCategories) {
+    public void setTicketCategories(List<TicketCategory> ticketCategories) {
         this.ticketCategories = ticketCategories;
     }
 }

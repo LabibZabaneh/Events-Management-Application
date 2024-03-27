@@ -1,5 +1,6 @@
 package com.event.management.registrations.dto;
 
+import com.event.management.registrations.domain.TicketCategory;
 import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public class EventDTO {
 
     private String eventName;
 
-    private List<TicketCategoryDTO>  ticketCategories;
+    private List<TicketCategory>  ticketCategories;
 
     public String getEventName() {
         return eventName;
@@ -19,11 +20,11 @@ public class EventDTO {
         this.eventName = eventName;
     }
 
-    public List<TicketCategoryDTO> getTicketCategories() {
+    public List<TicketCategory> getTicketCategories() {
         return ticketCategories;
     }
 
-    public void setTicketCategories(List<TicketCategoryDTO> ticketCategories) {
+    public void setTicketCategories(List<TicketCategory> ticketCategories) {
         this.ticketCategories = ticketCategories;
     }
 }

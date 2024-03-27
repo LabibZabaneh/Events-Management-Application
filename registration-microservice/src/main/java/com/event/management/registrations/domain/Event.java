@@ -21,8 +21,7 @@ public class Event {
     @ManyToMany
     private Set<User> registeredUsers;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection
     private List<TicketCategory> ticketCategories;
 
     public Long getId() {

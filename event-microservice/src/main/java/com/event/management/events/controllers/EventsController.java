@@ -4,11 +4,9 @@ import com.event.management.events.domain.Event;
 import com.event.management.events.domain.Organizer;
 import com.event.management.events.domain.TicketCategory;
 import com.event.management.events.dto.EventDTO;
-import com.event.management.events.dto.TicketCategoryDTO;
 import com.event.management.events.kafka.EventsProducer;
 import com.event.management.events.repositories.EventsRepository;
 import com.event.management.events.repositories.OrganizersRepository;
-import com.event.management.events.repositories.TicketCategoriesRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
@@ -26,9 +24,6 @@ public class EventsController {
 
     @Inject
     OrganizersRepository organizersRepo;
-
-    @Inject
-    TicketCategoriesRepository ticketCategoriesRepo;
 
     @Inject
     EventsProducer producer;
@@ -52,19 +47,8 @@ public class EventsController {
         e.setDate(dto.getDate());
         e.setTime(dto.getTime());
         e.setVenue(dto.getVenue());
-        e.setTicketCategories(new ArrayList<>());
+        e.setTicketCategories(dto.getTicketCategories());
         repo.save(e);
-
-        for (TicketCategoryDTO ticketCategoryDTO : dto.getTicketCategories()){
-            TicketCategory ticketCategory = new TicketCategory();
-            ticketCategory.setName(ticketCategoryDTO.getName());
-            ticketCategory.setEvent(e);
-            ticketCategory.setInitialCount(ticketCategoryDTO.getInitialCount());
-            ticketCategory.setPrice(ticketCategoryDTO.getPrice());
-            ticketCategoriesRepo.save(ticketCategory);
-        }
-
-        repo.update(e);
 
         producer.postedEvent(e.getId(), dto);
 

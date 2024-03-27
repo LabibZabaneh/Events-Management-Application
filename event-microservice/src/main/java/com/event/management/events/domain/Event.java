@@ -34,7 +34,7 @@ public class Event {
     private LocalTime time;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection
     private List<TicketCategory> ticketCategories;
 
     public Long getId() {
