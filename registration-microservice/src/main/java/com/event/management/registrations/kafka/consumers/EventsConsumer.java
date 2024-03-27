@@ -1,13 +1,17 @@
 package com.event.management.registrations.kafka.consumers;
 
 import com.event.management.registrations.domain.Event;
+import com.event.management.registrations.domain.TicketCategory;
 import com.event.management.registrations.dto.EventDTO;
+import com.event.management.registrations.dto.TicketCategoryDTO;
 import com.event.management.registrations.repositories.EventsRepository;
+import com.event.management.registrations.repositories.TicketCategoriesRepository;
 import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -20,6 +24,9 @@ public class EventsConsumer {
     @Inject
     EventsRepository eventsRepo;
 
+    @Inject
+    TicketCategoriesRepository ticketCategoriesRepo;
+
     @Topic(EVENT_POSTED_TOPIC)
     public void postedEvent(@KafkaKey Long id, EventDTO dto){
         Optional<Event> oEvent = eventsRepo.findById(id);
@@ -28,7 +35,20 @@ public class EventsConsumer {
             event.setId(id);
             event.setEventName(dto.getEventName());
             event.setRegisteredUsers(new HashSet<>());
+            event.setTicketCategories(new ArrayList<>());
             eventsRepo.save(event);
+
+            for (TicketCategoryDTO ticketCategoryDTO : dto.getTicketCategories()){
+                TicketCategory ticketCategory = new TicketCategory();
+                ticketCategory.setEvent(event);
+                ticketCategory.setName(ticketCategoryDTO.getName());
+                ticketCategory.setInitialCount(ticketCategoryDTO.getInitialCount());
+                ticketCategory.setPrice(ticketCategoryDTO.getPrice());
+                ticketCategory.setCurrentCount(0);
+                ticketCategoriesRepo.save(ticketCategory);
+            }
+
+            eventsRepo.update(event);
 
             System.out.println("Event added with id" + id);
         }

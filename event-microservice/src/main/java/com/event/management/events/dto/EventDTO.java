@@ -4,6 +4,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Serdeable
 public class EventDTO {
@@ -13,6 +14,7 @@ public class EventDTO {
     private String venue;
     private LocalDate date;
     private LocalTime time;
+    private List<TicketCategoryDTO> ticketCategories;
 
     public String getEventName() {
         return eventName;
@@ -52,5 +54,13 @@ public class EventDTO {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public List<TicketCategoryDTO> getTicketCategories() {
+        return ticketCategories;
+    }
+
+    public void setTicketCategories(List<TicketCategoryDTO> ticketCategories) {
+        this.ticketCategories = ticketCategories;
     }
 }

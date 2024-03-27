@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Serdeable
@@ -22,7 +23,7 @@ public class Event {
 
     @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TicketCategory> ticketCategories;
+    private List<TicketCategory> ticketCategories;
 
     public Long getId() {
         return id;
@@ -48,11 +49,11 @@ public class Event {
         this.registeredUsers = registeredUsers;
     }
 
-    public Set<TicketCategory> getTicketCategories() {
+    public List<TicketCategory> getTicketCategories() {
         return ticketCategories;
     }
 
-    public void setTicketCategories(Set<TicketCategory> ticketCategories) {
+    public void setTicketCategories(List<TicketCategory> ticketCategories) {
         this.ticketCategories = ticketCategories;
     }
 }
