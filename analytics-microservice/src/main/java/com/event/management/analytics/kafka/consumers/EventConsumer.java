@@ -10,6 +10,7 @@ import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 
 @KafkaListener
@@ -37,7 +38,7 @@ public class EventConsumer {
             event.setMaleRegistrations(0);
             event.setFemaleRegistrations(0);
             event.setOtherRegistrations(0);
-            event.setAgeCounts(new ArrayList<>());
+            event.setAgeCounts(new HashSet<>());
             repo.save(event);
             System.out.println("Event posted with id " + id);
         }

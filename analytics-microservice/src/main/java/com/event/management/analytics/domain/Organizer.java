@@ -5,6 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,8 +38,8 @@ public class Organizer {
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> postedEvents;
 
-    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-    private List<OrganizerAgeCount> ageCounts = new ArrayList<>(); // Regarding followers only
+    @ElementCollection
+    private Set<AgeCount> ageCounts = new HashSet<>(); // Regarding followers only
 
     public Long getId() {
         return id;
@@ -73,7 +74,7 @@ public class Organizer {
     }
 
     public void addFollower(int age, Gender gender){
-        for (OrganizerAgeCount ageCount : ageCounts){
+        for (AgeCount ageCount : ageCounts){
             if (ageCount.getAge() == age){
                 ageCount.incrementCount();
                 incrementGenderCount(gender);
@@ -81,7 +82,7 @@ public class Organizer {
                 return;
             }
         }
-        ageCounts.add(new OrganizerAgeCount(this, age, 1));
+        ageCounts.add(new AgeCount(age, 1));
         this.averageAge = (this.averageAge * (this.followers-1) + age) / this.followers;
         incrementGenderCount(gender);
         this.followers++;
@@ -89,7 +90,7 @@ public class Organizer {
 
     public void removeFollower(int age, Gender gender){
         if (this.followers>0 && this.averageAge>0 && maleFollowers>0 && femaleFollowers>0 && otherFollowers>0){
-            for (OrganizerAgeCount ageCount : ageCounts){
+            for (AgeCount ageCount : ageCounts){
                 if (ageCount.getAge() == age){
                     ageCount.decrementCount();
                     this.followers--;
@@ -133,11 +134,11 @@ public class Organizer {
         this.postedEvents = postedEvents;
     }
 
-    public List<OrganizerAgeCount> getAgeCounts() {
+    public Set<AgeCount> getAgeCounts() {
         return ageCounts;
     }
 
-    public void setAgeCounts(List<OrganizerAgeCount> ageCounts) {
+    public void setAgeCounts(Set<AgeCount> ageCounts) {
         this.ageCounts = ageCounts;
     }
 

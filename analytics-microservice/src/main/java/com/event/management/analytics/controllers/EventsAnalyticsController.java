@@ -1,6 +1,6 @@
 package com.event.management.analytics.controllers;
 
-import com.event.management.analytics.domain.EventAgeCount;
+import com.event.management.analytics.domain.AgeCount;
 import com.event.management.analytics.domain.Event;
 import com.event.management.analytics.domain.Gender;
 import com.event.management.analytics.repositories.EventsRepository;
@@ -23,10 +23,10 @@ public class EventsAnalyticsController {
     }
 
     @Get("/events/{id}/age-distribution")
-    public List<EventAgeCount> getEventAgeDistribution(long id){
+    public Set<AgeCount> getEventAgeDistribution(long id){
         Optional<Event> oEvent = eventsRepo.findById(id);
         if (oEvent.isEmpty()){
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
         return oEvent.get().getAgeCounts()
                 ;
@@ -42,12 +42,12 @@ public class EventsAnalyticsController {
     }
 
     @Get("/events/{id}/top-age-groups/{limit}")
-    public List<EventAgeCount> getEventTopAgeGroups(long id, int limit){
+    public List<AgeCount> getEventTopAgeGroups(long id, int limit){
         Optional<Event> oEvent = eventsRepo.findById(id);
         if (oEvent.isEmpty()){
             return Collections.emptyList();
         }
-        List<EventAgeCount> ageCounts = oEvent.get().getAgeCounts();
+        List<AgeCount> ageCounts = new ArrayList<>(oEvent.get().getAgeCounts());
         ageCounts.sort((a1, a2) -> a2.getCount() - a1.getCount());
         return ageCounts.subList(0, Math.min(limit, ageCounts.size()));
     }

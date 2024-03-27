@@ -4,7 +4,9 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Serdeable
 @Entity
@@ -28,8 +30,8 @@ public class Event {
     @Column(nullable = false)
     private int otherRegistrations;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<EventAgeCount> ageCounts = new ArrayList<>();
+    @ElementCollection
+    private Set<AgeCount> ageCounts = new HashSet<>();
 
 
     public Long getId() {
@@ -58,7 +60,7 @@ public class Event {
 
     public void addRegistration(int age, Gender gender){
         boolean found = false;
-        for (EventAgeCount ageCount : ageCounts){
+        for (AgeCount ageCount : ageCounts){
             if (ageCount.getAge() == age){
                 ageCount.incrementCount();
                 found = true;
@@ -66,7 +68,7 @@ public class Event {
             }
         }
         if (!found) {
-            ageCounts.add(new EventAgeCount(this, age, 1));
+            ageCounts.add(new AgeCount(age, 1));
         }
         this.registrations++;
         incrementGenderCount(gender);
@@ -78,7 +80,7 @@ public class Event {
             return;
         }
 
-        for (EventAgeCount ageCount : ageCounts) {
+        for (AgeCount ageCount : ageCounts) {
             if (ageCount.getAge() == age) {
                 ageCount.decrementCount();
                 this.registrations--;
@@ -128,11 +130,11 @@ public class Event {
         this.organizer = organizer;
     }
 
-    public List<EventAgeCount> getAgeCounts() {
+    public Set<AgeCount> getAgeCounts() {
         return ageCounts;
     }
 
-    public void setAgeCounts(List<EventAgeCount> ageCounts) {
+    public void setAgeCounts(Set<AgeCount> ageCounts) {
         this.ageCounts = ageCounts;
     }
 

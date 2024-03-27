@@ -37,10 +37,10 @@ public class OrganizersAnalyticsController {
     }
 
     @Get("/organizers/{id}/followers-age-distribution")
-    public List<OrganizerAgeCount> getOrganizerFollowersAgeDistribution(long id){
+    public Set<AgeCount> getOrganizerFollowersAgeDistribution(long id){
         Optional<Organizer> oOrganizer = organizersRepo.findById(id);
         if (oOrganizer.isEmpty()){
-            return new ArrayList<>();
+            return Collections.emptySet();
         }
         return oOrganizer.get().getAgeCounts();
     }
@@ -94,7 +94,7 @@ public class OrganizersAnalyticsController {
         Organizer organizer = oOrganizer.get();
         Map<Integer, Integer> ageCounts = new HashMap<>();
         for (Event event : organizer.getPostedEvents()){
-            for (EventAgeCount ageCount : event.getAgeCounts()){
+            for (AgeCount ageCount : event.getAgeCounts()){
                 int age = ageCount.getAge();
                 int currentCount = ageCounts.getOrDefault(age, 0); // Get existing count or default to 0
                 ageCounts.put(age, currentCount + ageCount.getCount()); // Update count
