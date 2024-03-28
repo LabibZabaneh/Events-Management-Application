@@ -27,6 +27,9 @@ public class User {
     @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
     private Set<Organizer> followedOrganizers;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Ticket> tickets;
+
     public Long getId() {
         return id;
     }
@@ -65,5 +68,13 @@ public class User {
 
     public void setFollowedOrganizers(Set<Organizer> followedOrganizers) {
         this.followedOrganizers = followedOrganizers;
+    }
+
+    public Set<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(Set<Ticket> tickets) {
+        this.tickets = tickets;
     }
 }

@@ -9,8 +9,8 @@ import javax.persistence.*;
 public class TicketCategory {
 
     private String name;
-    private int initialCount;
-    private int currentCount = 0;
+    private int totalTicketCount;
+    private int soldTicketsCount;
     private double price;
 
     public String getName() {
@@ -21,20 +21,20 @@ public class TicketCategory {
         this.name = name;
     }
 
-    public int getInitialCount() {
-        return initialCount;
+    public int getTotalTicketCount() {
+        return totalTicketCount;
     }
 
-    public void setInitialCount(int initialCount) {
-        this.initialCount = initialCount;
+    public void setTotalTicketCount(int totalTicketCount) {
+        totalTicketCount = totalTicketCount;
     }
 
-    public int getCurrentCount() {
-        return currentCount;
+    public int getSoldTicketsCount() {
+        return soldTicketsCount;
     }
 
-    public void setCurrentCount(int currentCount) {
-        this.currentCount = currentCount;
+    public void setSoldTicketsCount(int soldTicketsCount) {
+        this.soldTicketsCount = soldTicketsCount;
     }
 
     public double getPrice() {
@@ -43,6 +43,16 @@ public class TicketCategory {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void incrementSoldTicketCount(){
+        soldTicketsCount++;
+    }
+
+    public void decrementSoldTicketCount(){
+        if (soldTicketsCount > 0){
+            soldTicketsCount--;
+        }
     }
 
 }
