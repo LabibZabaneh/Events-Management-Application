@@ -19,6 +19,16 @@ public class Ticket {
     @Embedded
     TicketCategory ticketCategory;
 
+    public Ticket(Event event, User user, TicketCategory ticketCategory){
+        this.event = event;
+        this.user = user;
+        this.ticketCategory = ticketCategory;
+    }
+
+    public Ticket() {
+
+    }
+
     public Long getId() {
         return id;
     }

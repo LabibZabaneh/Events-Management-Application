@@ -45,6 +45,10 @@ public class TicketCategory {
         this.price = price;
     }
 
+    public boolean areTicketsAvailable(){
+        return soldTicketsCount < totalTicketCount;
+    }
+
     public void incrementSoldTicketCount(){
         soldTicketsCount++;
     }
