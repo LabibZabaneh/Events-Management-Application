@@ -64,31 +64,33 @@ public class RegistrationController {
             return validation;
         }
 
-        User u = usersRepo.findById(userId).get();
-        Event e = eventsRepo.findById(eventId).get();
+        User user = usersRepo.findById(userId).get();
+        Event event = eventsRepo.findById(eventId).get();
 
-        return register(u, e, ticketCategory);
+        return register(user, event, ticketCategory);
     }
 
     @Transactional
-    @Delete("/users/{eventId}/{userId}")
-    public HttpResponse<Void> deleteRegistration(long eventId, long userId){
-        Optional<Event> oEvent = eventsRepo.findById(eventId);
-        Optional<User> oUser = usersRepo.findById(userId);
-        if (oEvent.isEmpty() || oUser.isEmpty()){
-            return HttpResponse.notFound();
+    @Delete("/users/{userId}/{eventId}/{ticketCategory}")
+    public HttpResponse<String> deleteRegistration(long eventId, long userId, String ticketCategory){
+        HttpResponse<String> validation = validateInputs(userId, eventId, ticketCategory);
+        if (validation != null){
+            return validation;
         }
-
-        Event event = oEvent.get();
-        User user = oUser.get();
-
-        if (event.getRegisteredUsers().removeIf(u -> userId == u.getId()) && user.getRegisteredEvents().removeIf(e -> eventId == e.getId())){
-            producer.addedUnRegistration(userId, eventId);
+        User user = usersRepo.findById(userId).get();
+        Event event = eventsRepo.findById(eventId).get();
+        HttpResponse<String> validateTicketCategory = validateTicketCategory(event, ticketCategory);
+        if (validateTicketCategory != null){
+            return validateTicketCategory;
         }
-
-        eventsRepo.update(event);
-        usersRepo.update(user);
-
+        Ticket ticketToRemove = findTicketToRemove(user, event, ticketCategory);
+        if (ticketToRemove == null) {
+            return HttpResponse.notFound("Ticket not found for user, event, and ticket category");
+        }
+        if (event.getSoldTickets().contains(ticketToRemove)){
+            return HttpResponse.notFound("Event does not have the ticket");
+        }
+        updateUnregistrationsEntities(user, event, ticketToRemove); // remove tickets from user, event and delete ticket
         return HttpResponse.ok();
     }
 
@@ -130,5 +132,34 @@ public class RegistrationController {
         user.getRegisteredEvents().add(event);
         eventsRepo.update(event);
         usersRepo.update(user);
+    }
+
+    private Ticket findTicketToRemove(User user, Event event, String ticketCategory){
+        for (Ticket ticket: user.getTickets()){
+            if (ticket.getEvent().getId().equals(event.getId()) && ticket.getTicketCategory().getName().equals(ticketCategory)){
+                return ticket;
+            }
+        }
+        return null;
+    }
+
+    private HttpResponse<String> validateTicketCategory(Event event, String ticketCategory){
+        for (TicketCategory category: event.getTicketCategories()){
+            if (category.getName().equals(ticketCategory)){
+                if (category.getSoldTicketsCount() <= 0){
+                    return HttpResponse.notFound("No tickets were sold");
+                }
+            }
+        }
+        return null;
+    }
+
+    private void updateUnregistrationsEntities(User user, Event event, Ticket ticketToRemove){
+        event.getSoldTickets().remove(ticketToRemove);
+        user.getTickets().remove(ticketToRemove);
+        eventsRepo.update(event);
+        usersRepo.update(user);
+        ticketsRepo.delete(ticketToRemove);
+        producer.addedUnRegistration(user.getId(), event.getId());
     }
 }
