@@ -1,6 +1,15 @@
 micronaut:
   application:
     name: notificationMicroservice
+  email:
+    enabled: true
+    host: smtp.gmail.com
+    port: 587
+    username: just.for.testing.only.email@gmail.com
+    password: clmrzzqjhepploxj
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.auth.enable: true
 datasources:
   default:
     driver-class-name: org.mariadb.jdbc.Driver
