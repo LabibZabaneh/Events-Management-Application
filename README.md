@@ -10,29 +10,30 @@ This Events Management application is designed to facilitate the creation, manag
 - **Messaging System:** [Apache Kafka](https://kafka.apache.org/)
 - **Containerization:** [Docker](https://www.docker.com/)
 - **Database:** [MariaDB](https://mariadb.org/)
+- **Stripe:** [Stripe](https://stripe.com/)
 
 ## Microservices
 
 1. **Event Microservice:**
-   - Handles CRUD operations for users, events, and businesses.
+   - Handles CRUD operations for users, events, and organizers.
 
 2. **Registration Microservice:**
    - Handles user registration to events.
    - Enables users to follow organizers
+   - Generates tickets upon registration.
 
 3. **Analytics Microservice:**
    - Provides insights into trending events and analytics.
+
+4. **Payment Microservice:**
+   - Facilitates users buying tickets for events through Stripe.
    - (Under implementation)
 
-4. **Recommendation Microservice:**
+5. **Recommendation Microservice:**
    - Provides personalized event recommendations to users.
    - (To be implemented)
 
-6. **Notification Microservice:**
-   - Handles notifications, such as email notifications to users and entities.
-   - (To be implemented)
-
-7. **Rating and Review Microservice:**
+6. **Rating and Review Microservice:**
    - Manages ratings and reviews from users for events.
    - (To be implemented)
   
@@ -49,8 +50,9 @@ This Events Management application is designed to facilitate the creation, manag
 3. Run the application using Docker Compose: `docker-compose up -d`
 4. Access the event-microservice at: [http://localhost:8080](http://localhost:8080) (must manually run the microservice)
 5. Access the registration-microservice at: [http://localhost:8081](http://localhost:8081) (must manually run the microservice)
+6. Access the analytics-microservice at: [http://localhost:8082](http://localhost:8082) (must manually run the microservice)
 
 ## Acknowledgments
 
-- The event-microservice and registration-microservice are currently implemented; however, other microservices are yet to be built.
+- The event-microservice, registration-microservice and analytics-microservice are currently implemented; however, other microservices are yet to be built.
 - There is no user interface yet; the development of the frontend will start after the full completion of the backend.
