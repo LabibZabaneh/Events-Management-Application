@@ -16,3 +16,7 @@ netty:
   default:
     allocator:
       max-order: 3
+stripe:
+  secret-key: "${environment.getProperty('STRIPE_SECRET_KEY')}"
+kafka:
+  enabled: false
