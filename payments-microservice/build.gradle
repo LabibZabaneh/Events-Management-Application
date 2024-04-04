@@ -8,6 +8,7 @@ group = "com.event.management.payments"
 
 repositories {
     mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 dependencies {
@@ -23,7 +24,8 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-    implementation("com.stripe:stripe-java:21.54.0")
+    implementation("io.micronaut:micronaut-stripe")
+    implementation("com.stripe:stripe-java:24.22.0")
 }
 
 
