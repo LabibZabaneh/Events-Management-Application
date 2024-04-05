@@ -2,23 +2,23 @@ package com.event.management.payments.model;
 
 public class PaymentRequest {
 
-    private Integer amount;
+    private Long amount;
     private String currency;
     private String description;
-    private String paymentMethodId;
+    private String paymentMethod;
 
-    public PaymentRequest(Integer amount, String currency, String description, String paymentMethodId) {
+    public PaymentRequest(Long amount, String currency, String description, String paymentMethod) {
         this.amount = amount;
         this.currency = currency;
         this.description = description;
-        this.paymentMethodId = paymentMethodId;
+        this.paymentMethod = paymentMethod;
     }
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 
@@ -38,11 +38,11 @@ public class PaymentRequest {
         this.description = description;
     }
 
-    public String getPaymentMethodId() {
-        return paymentMethodId;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setPaymentMethodId(String paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

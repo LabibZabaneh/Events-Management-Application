@@ -6,12 +6,12 @@ public class PaymentResponse {
 
     private String chargeId;
     private String status;
-    private Long amountCaptured;
-    private String paymentMethod;
+    private String message;
 
-    public PaymentResponse(String chargeId, String status) {
+    public PaymentResponse(String chargeId, String status, String message) {
         this.chargeId = chargeId;
         this.status = status;
+        this.message = message;
     }
 
     public String getChargeId() {
@@ -26,30 +26,15 @@ public class PaymentResponse {
         return status;
     }
 
-    public Long getAmountCaptured() {
-        return amountCaptured;
-    }
-
-    public void setAmountCaptured(Long amountCaptured) {
-        this.amountCaptured = amountCaptured;
-    }
-
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public String getMessage() {
+        return message;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public static PaymentResponse createFromStripeCharge(Charge charge) {
-        PaymentResponse response = new PaymentResponse(charge.getId(), charge.getStatus());
-        response.setAmountCaptured(charge.getAmountCaptured());
-        response.setPaymentMethod(charge.getPaymentMethod());
-        return response;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
