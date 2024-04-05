@@ -5,7 +5,6 @@ import com.event.management.payments.model.PaymentRequest;
 import com.event.management.payments.model.PaymentRequestBody;
 import com.event.management.payments.model.PaymentResponse;
 import com.event.management.payments.services.PaymentService;
-import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;

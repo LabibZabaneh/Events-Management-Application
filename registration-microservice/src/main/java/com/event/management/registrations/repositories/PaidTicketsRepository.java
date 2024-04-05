@@ -5,5 +5,5 @@ import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
 
 @Repository
-public interface TicketsRepository extends CrudRepository<Ticket, Long> {
+public interface PaidTicketsRepository extends CrudRepository<Ticket, Long> {
 }

@@ -6,7 +6,7 @@ import com.event.management.registrations.domain.TicketCategory;
 import com.event.management.registrations.domain.User;
 import com.event.management.registrations.kafka.producers.RegistrationProducer;
 import com.event.management.registrations.repositories.EventsRepository;
-import com.event.management.registrations.repositories.TicketsRepository;
+import com.event.management.registrations.repositories.ReservedTicketsRepository;
 import com.event.management.registrations.repositories.UsersRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
@@ -29,7 +29,7 @@ public class RegistrationController {
     EventsRepository eventsRepo;
 
     @Inject
-    TicketsRepository ticketsRepo;
+    ReservedTicketsRepository reservedTicketsRepo;
 
     @Inject
     RegistrationProducer producer;
@@ -70,6 +70,7 @@ public class RegistrationController {
         return register(user, event, ticketCategory);
     }
 
+    // TODO Potentially remove the deletion of registrations
     @Transactional
     @Delete("/users/{userId}/{eventId}/{ticketCategory}")
     public HttpResponse<String> deleteRegistration(long eventId, long userId, String ticketCategory){
@@ -114,10 +115,9 @@ public class RegistrationController {
                     return HttpResponse.notFound("No tickets available");
                 } else {
                     Ticket ticket = new Ticket(event, user, category);
-                    ticketsRepo.save(ticket);
+                    reservedTicketsRepo.save(ticket);
                     updateRegistrationEntities(user, event, ticket);
-                    category.incrementSoldTicketCount();
-                    producer.addedRegistration(user.getId(), event.getId());
+                    category.incrementReservedTicketCount();
                     return HttpResponse.ok();
                 }
             }
@@ -126,8 +126,8 @@ public class RegistrationController {
     }
 
     private void updateRegistrationEntities(User user, Event event, Ticket ticket){
-        event.getSoldTickets().add(ticket);
-        user.getTickets().add(ticket);
+        event.getReservedTickets().add(ticket);
+        user.getReservedTickets().add(ticket);
         event.getRegisteredUsers().add(user);
         user.getRegisteredEvents().add(event);
         eventsRepo.update(event);
@@ -159,7 +159,7 @@ public class RegistrationController {
         user.getTickets().remove(ticketToRemove);
         eventsRepo.update(event);
         usersRepo.update(user);
-        ticketsRepo.delete(ticketToRemove);
+        reservedTicketsRepo.delete(ticketToRemove);
         producer.addedUnRegistration(user.getId(), event.getId());
     }
 }

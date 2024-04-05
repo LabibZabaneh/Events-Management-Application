@@ -28,6 +28,9 @@ public class User {
     private Set<Organizer> followedOrganizers;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Ticket> reservedTickets;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
 
     public Long getId() {
@@ -76,5 +79,13 @@ public class User {
 
     public void setTickets(Set<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public Set<Ticket> getReservedTickets() {
+        return reservedTickets;
+    }
+
+    public void setReservedTickets(Set<Ticket> reservedTickets) {
+        this.reservedTickets = reservedTickets;
     }
 }

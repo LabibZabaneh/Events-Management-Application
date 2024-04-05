@@ -25,6 +25,9 @@ public class Event {
     private List<TicketCategory> ticketCategories;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<Ticket> reservedTickets;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Ticket> soldTickets;
 
     public Long getId() {
@@ -65,5 +68,13 @@ public class Event {
 
     public void setSoldTickets(List<Ticket> soldTickets) {
         this.soldTickets = soldTickets;
+    }
+
+    public List<Ticket> getReservedTickets() {
+        return reservedTickets;
+    }
+
+    public void setReservedTickets(List<Ticket> reservedTickets) {
+        this.reservedTickets = reservedTickets;
     }
 }

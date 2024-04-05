@@ -10,6 +10,7 @@ public class TicketCategory {
 
     private String name;
     private int totalTicketCount;
+    private int reservedTicketCount;
     private int soldTicketsCount;
     private double price;
 
@@ -45,8 +46,16 @@ public class TicketCategory {
         this.price = price;
     }
 
+    public int getReservedTicketCount() {
+        return reservedTicketCount;
+    }
+
+    public void setReservedTicketCount(int reservedTicketCount) {
+        this.reservedTicketCount = reservedTicketCount;
+    }
+
     public boolean areTicketsAvailable(){
-        return soldTicketsCount < totalTicketCount;
+        return soldTicketsCount + reservedTicketCount < totalTicketCount;
     }
 
     public void incrementSoldTicketCount(){
@@ -58,5 +67,16 @@ public class TicketCategory {
             soldTicketsCount--;
         }
     }
+
+    public void incrementReservedTicketCount(){
+        reservedTicketCount++;
+    }
+
+    public void decrementReservedTicketCount(){
+        if (reservedTicketCount > 0){
+            reservedTicketCount--;
+        }
+    }
+
 
 }
