@@ -18,31 +18,24 @@ public class PaymentServiceImpl implements PaymentService {
     PaymentsProducer producer;
 
     @Override
-    public PaymentResponse processPayment(PaymentRequest paymentRequest, long ticketId) {
+    public PaymentResponse processPayment(PaymentRequest paymentRequest, long ticketId) throws StripeException {
         Stripe.apiKey = stripeSecretKey;
 
-        try {
-            // Create a charge with Stripe
-            ChargeCreateParams.Builder builder = ChargeCreateParams.builder()
-                    .setAmount(paymentRequest.getAmount())
-                    .setCurrency(paymentRequest.getCurrency())
-                    .setDescription(paymentRequest.getDescription())
-                    .setSource(paymentRequest.getPaymentMethod());
+        // Create a charge with Stripe
+        ChargeCreateParams.Builder builder = ChargeCreateParams.builder()
+                .setAmount(paymentRequest.getAmount())
+                .setCurrency(paymentRequest.getCurrency())
+                .setDescription(paymentRequest.getDescription())
+                .setSource(paymentRequest.getPaymentMethod());
 
-            Charge charge = Charge.create(builder.build());
+        Charge charge = Charge.create(builder.build());
 
-            // Handle successful payment
-            if (charge.getPaid()) {
-                // Mark ticket as paid
-                producer.successfulPayment(ticketId, "paid");
-                // Return payment response
-                return new PaymentResponse(charge.getId(), charge.getStatus(), "Payment successful");
-            } else {
-                // Return failed payment response
-                return new PaymentResponse(null, "failed", "Payment failed");
-            }
-        } catch (StripeException e) {
-            e.printStackTrace();
+        // Handle successful payment
+        if (charge.getPaid()) {
+            producer.successfulPayment(ticketId, "paid");
+            return new PaymentResponse(charge.getId(), charge.getStatus(), "Payment successful");
+        } else { // Handle unsuccessful payment
+            producer.unsuccessfulPayment(ticketId, "failed");
             return new PaymentResponse(null, "failed", "Payment failed");
         }
     }

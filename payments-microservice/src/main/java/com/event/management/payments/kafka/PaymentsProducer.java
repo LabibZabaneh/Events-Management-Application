@@ -9,7 +9,12 @@ public interface PaymentsProducer {
 
     String PAYMENT_SUCCESSFUL_TOPIC = "payment-successful";
 
+    String PAYMENT_UNSUCCESSFUL_TOPIC = "payment-unsuccessful";
+
     @Topic(PAYMENT_SUCCESSFUL_TOPIC)
     void successfulPayment(@KafkaKey Long ticketId, String status);
+
+    @Topic(PAYMENT_UNSUCCESSFUL_TOPIC)
+    void unsuccessfulPayment(@KafkaKey Long ticketId, String status);
 
 }
