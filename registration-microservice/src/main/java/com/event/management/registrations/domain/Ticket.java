@@ -18,9 +18,6 @@ public class Ticket {
     @JoinColumn(name = "ticket_category_id", nullable = false)
     private TicketCategory ticketCategory;
 
-
-    public Ticket() {}
-
     public Long getId() {
         return id;
     }
