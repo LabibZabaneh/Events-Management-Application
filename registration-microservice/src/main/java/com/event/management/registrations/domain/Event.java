@@ -17,18 +17,8 @@ public class Event {
     @Column(nullable = false)
     private String eventName;
 
-    @JsonIgnore
-    @ManyToMany
-    private Set<User> registeredUsers;
-
-    @ElementCollection
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<TicketCategory> ticketCategories;
-
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Ticket> reservedTickets;
-
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Ticket> soldTickets;
 
     public Long getId() {
         return id;
@@ -46,14 +36,6 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public Set<User> getRegisteredUsers() {
-        return registeredUsers;
-    }
-
-    public void setRegisteredUsers(Set<User> registeredUsers) {
-        this.registeredUsers = registeredUsers;
-    }
-
     public List<TicketCategory> getTicketCategories() {
         return ticketCategories;
     }
@@ -62,19 +44,4 @@ public class Event {
         this.ticketCategories = ticketCategories;
     }
 
-    public List<Ticket> getSoldTickets() {
-        return soldTickets;
-    }
-
-    public void setSoldTickets(List<Ticket> soldTickets) {
-        this.soldTickets = soldTickets;
-    }
-
-    public List<Ticket> getReservedTickets() {
-        return reservedTickets;
-    }
-
-    public void setReservedTickets(List<Ticket> reservedTickets) {
-        this.reservedTickets = reservedTickets;
-    }
 }

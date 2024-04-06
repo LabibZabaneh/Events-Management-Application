@@ -3,16 +3,24 @@ package com.event.management.registrations.domain;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Serdeable
-@Embeddable
+@Entity
 public class TicketCategory {
 
+    @Id
+    @GeneratedValue
     private String name;
-    private int totalTicketCount;
-    private int reservedTicketCount;
-    private int soldTicketsCount;
+    @Column(nullable = false)
     private double price;
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+    @OneToMany(mappedBy = "ticketCategory", cascade = CascadeType.ALL)
+    private List<Ticket> reservedTickets;
+    @OneToMany(mappedBy = "ticketCategory", cascade = CascadeType.ALL)
+    private List<Ticket> soldTickets;
 
     public String getName() {
         return name;
@@ -20,22 +28,6 @@ public class TicketCategory {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getTotalTicketCount() {
-        return totalTicketCount;
-    }
-
-    public void setTotalTicketCount(int totalTicketCount) {
-        totalTicketCount = totalTicketCount;
-    }
-
-    public int getSoldTicketsCount() {
-        return soldTicketsCount;
-    }
-
-    public void setSoldTicketsCount(int soldTicketsCount) {
-        this.soldTicketsCount = soldTicketsCount;
     }
 
     public double getPrice() {
@@ -46,37 +38,27 @@ public class TicketCategory {
         this.price = price;
     }
 
-    public int getReservedTicketCount() {
-        return reservedTicketCount;
+    public Event getEvent() {
+        return event;
     }
 
-    public void setReservedTicketCount(int reservedTicketCount) {
-        this.reservedTicketCount = reservedTicketCount;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
-    public boolean areTicketsAvailable(){
-        return soldTicketsCount + reservedTicketCount < totalTicketCount;
+    public List<Ticket> getReservedTickets() {
+        return reservedTickets;
     }
 
-    public void incrementSoldTicketCount(){
-        soldTicketsCount++;
+    public void setReservedTickets(List<Ticket> reservedTickets) {
+        this.reservedTickets = reservedTickets;
     }
 
-    public void decrementSoldTicketCount(){
-        if (soldTicketsCount > 0){
-            soldTicketsCount--;
-        }
+    public List<Ticket> getSoldTickets() {
+        return soldTickets;
     }
 
-    public void incrementReservedTicketCount(){
-        reservedTicketCount++;
+    public void setSoldTickets(List<Ticket> soldTickets) {
+        this.soldTickets = soldTickets;
     }
-
-    public void decrementReservedTicketCount(){
-        if (reservedTicketCount > 0){
-            reservedTicketCount--;
-        }
-    }
-
-
 }

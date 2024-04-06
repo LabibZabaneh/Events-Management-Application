@@ -5,29 +5,21 @@ import javax.persistence.*;
 @Entity
 public class Ticket {
 
-    @GeneratedValue
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Embedded
-    TicketCategory ticketCategory;
+    @ManyToOne
+    @JoinColumn(name = "ticket_category_id", nullable = false)
+    private TicketCategory ticketCategory;
 
-    public Ticket(Event event, User user, TicketCategory ticketCategory){
-        this.event = event;
-        this.user = user;
-        this.ticketCategory = ticketCategory;
-    }
 
-    public Ticket() {
-
-    }
+    public Ticket() {}
 
     public Long getId() {
         return id;
@@ -35,14 +27,6 @@ public class Ticket {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     public User getUser() {

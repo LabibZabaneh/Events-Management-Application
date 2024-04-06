@@ -20,18 +20,13 @@ public class User {
     private String email;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "registeredUsers")
-    private Set<Event> registeredEvents;
-
-    @JsonIgnore
     @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
     private Set<Organizer> followedOrganizers;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Ticket> reservedTickets;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
+
 
     public Long getId() {
         return id;
@@ -57,14 +52,6 @@ public class User {
         this.email = email;
     }
 
-    public Set<Event> getRegisteredEvents() {
-        return registeredEvents;
-    }
-
-    public void setRegisteredEvents(Set<Event> registeredEvents) {
-        this.registeredEvents = registeredEvents;
-    }
-
     public Set<Organizer> getFollowedOrganizers() {
         return followedOrganizers;
     }
@@ -81,11 +68,4 @@ public class User {
         this.tickets = tickets;
     }
 
-    public Set<Ticket> getReservedTickets() {
-        return reservedTickets;
-    }
-
-    public void setReservedTickets(Set<Ticket> reservedTickets) {
-        this.reservedTickets = reservedTickets;
-    }
 }
