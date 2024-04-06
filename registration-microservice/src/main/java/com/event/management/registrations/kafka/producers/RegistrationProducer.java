@@ -14,5 +14,5 @@ public interface RegistrationProducer {
     void addedRegistration(@KafkaKey Long userId, Long eventId);
 
     @Topic(UNREGISTRATIONS_TOPIC)
-    void addedUnRegistration(@KafkaKey Long userId, Long eventId);
+    void deletedRegistration(@KafkaKey Long userId, Long eventId);
 }

@@ -1,15 +1,18 @@
 package com.event.management.registrations.kafka.consumers;
 
 import com.event.management.registrations.domain.Event;
+import com.event.management.registrations.domain.TicketCategory;
 import com.event.management.registrations.dto.EventDTO;
+import com.event.management.registrations.dto.TicketCategoryDTO;
 import com.event.management.registrations.repositories.EventsRepository;
+import com.event.management.registrations.repositories.TicketCategoriesRepository;
 import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
-import java.util.HashSet;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @KafkaListener
 public class EventsConsumer {
@@ -20,6 +23,10 @@ public class EventsConsumer {
     @Inject
     EventsRepository eventsRepo;
 
+    @Inject
+    TicketCategoriesRepository ticketCategoriesRepo;
+
+    @Transactional
     @Topic(EVENT_POSTED_TOPIC)
     public void postedEvent(@KafkaKey Long id, EventDTO dto){
         Optional<Event> oEvent = eventsRepo.findById(id);
@@ -27,9 +34,22 @@ public class EventsConsumer {
             Event event = new Event();
             event.setId(id);
             event.setEventName(dto.getEventName());
-            event.setRegisteredUsers(new HashSet<>());
-            event.setTicketCategories(dto.getTicketCategories());
+
+            List<TicketCategory> ticketCategories = new ArrayList<>();
+            for (TicketCategoryDTO ticketCategoryDTO : dto.getTicketCategories()){
+                TicketCategory ticketCategory = new TicketCategory();
+                ticketCategory.setName(ticketCategoryDTO.getName());
+                ticketCategory.setEvent(event);
+                ticketCategory.setPrice(ticketCategoryDTO.getPrice());
+                ticketCategory.setReservedTickets(new ArrayList<>());
+                ticketCategory.setSoldTickets(new ArrayList<>());
+
+                ticketCategoriesRepo.save(ticketCategory);
+                ticketCategories.add(ticketCategory);
+            }
+            event.setTicketCategories(ticketCategories);
             eventsRepo.save(event);
+
             System.out.println("Event added with id" + id);
         }
     }

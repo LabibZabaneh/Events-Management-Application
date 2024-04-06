@@ -8,6 +8,7 @@ import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import jakarta.inject.Inject;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 @KafkaListener
@@ -27,6 +28,8 @@ public class UsersConsumer {
            user.setId(id);
            user.setFirstName(dto.getFirstName());
            user.setEmail(dto.getEmail());
+           user.setFollowedOrganizers(new HashSet<>());
+           user.setTickets(new HashSet<>());
            usersRepo.save(user);
 
            System.out.println("User created with id" + id);

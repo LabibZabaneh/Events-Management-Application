@@ -2,10 +2,11 @@ package com.event.management.registrations.kafka.consumers;
 
 import com.event.management.registrations.domain.Event;
 import com.event.management.registrations.domain.Ticket;
+import com.event.management.registrations.domain.TicketCategory;
 import com.event.management.registrations.domain.User;
 import com.event.management.registrations.repositories.EventsRepository;
-import com.event.management.registrations.repositories.PaidTicketsRepository;
-import com.event.management.registrations.repositories.ReservedTicketsRepository;
+import com.event.management.registrations.repositories.TicketCategoriesRepository;
+import com.event.management.registrations.repositories.TicketsRepository;
 import com.event.management.registrations.repositories.UsersRepository;
 import io.micronaut.configuration.kafka.annotation.KafkaKey;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
@@ -19,44 +20,40 @@ import java.util.Optional;
 public class PaymentsConsumer {
 
     final String PAYMENT_SUCCESSFUL_TOPIC = "payment-successful";
-    final String PAYMENT_UNSUCCESSFUL_TOPIC = "payment-un-successful";
+    final String PAYMENT_UNSUCCESSFUL_TOPIC = "payment-unsuccessful";
 
     @Inject
-    PaidTicketsRepository paidTicketsRepo;
-
-    @Inject
-    ReservedTicketsRepository reservedTicketsRepo;
+    TicketsRepository ticketsRepo;
 
     @Inject
     UsersRepository usersRepo;
 
     @Inject
-    EventsRepository eventsRepo;
+    TicketCategoriesRepository ticketCategoriesRepo;
 
     @Transactional
     @Topic(PAYMENT_SUCCESSFUL_TOPIC)
     public void paymentSuccessful(@KafkaKey Long ticketId, String message){
-        Optional<Ticket> oTicket = reservedTicketsRepo.findById(ticketId);
+        Optional<Ticket> oTicket = ticketsRepo.findById(ticketId);
         if (oTicket.isPresent()){
             Ticket ticket = oTicket.get();
             User user = ticket.getUser();
-            Event event = ticket.getEvent();
+            TicketCategory ticketCategory = ticket.getTicketCategory();
 
-            user.getReservedTickets().remove(ticket);
-            user.getTickets().add(ticket);
-            usersRepo.update(user);
+            if (ticketCategory.getReservedTickets().contains(ticket)){
+                // Change ticket to paid
+                ticketCategory.getReservedTickets().remove(ticket);
+                ticketCategory.getSoldTickets().add(ticket);
+                ticketCategoriesRepo.update(ticketCategory);
 
-            event.getReservedTickets().remove(ticket);
-            event.getSoldTickets().add(ticket);
+                // Add ticket to user
+                user.getTickets().add(ticket);
+                usersRepo.update(user);
 
-            eventsRepo.update(event);
-
-
-
-            reservedTicketsRepo.delete(ticket);
-            paidTicketsRepo.save(ticket);
-
-            System.out.println("Ticket with id " + ticketId + " has changed status from reserved to paid");
+                System.out.println("Ticket with id " + ticketId + " has changed status from reserved to paid");
+            } else {
+                System.out.println("Ticket not found in reserved tickets");
+            }
         }
     }
 }
