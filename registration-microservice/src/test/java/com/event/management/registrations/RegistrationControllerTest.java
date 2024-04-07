@@ -2,8 +2,12 @@ package com.event.management.registrations;
 
 import com.event.management.registrations.clients.RegistrationsClient;
 import com.event.management.registrations.domain.Event;
+import com.event.management.registrations.domain.Ticket;
+import com.event.management.registrations.domain.TicketCategory;
 import com.event.management.registrations.domain.User;
 import com.event.management.registrations.repositories.EventsRepository;
+import com.event.management.registrations.repositories.TicketCategoriesRepository;
+import com.event.management.registrations.repositories.TicketsRepository;
 import com.event.management.registrations.repositories.UsersRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -12,10 +16,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,71 +32,91 @@ public class RegistrationControllerTest {
     @Inject
     UsersRepository usersRepo;
 
+    @Inject
+    TicketsRepository ticketsRepo;
+
+    @Inject
+    TicketCategoriesRepository ticketCategoriesRepo;
+
     @BeforeEach
     public void clean(){
+        ticketsRepo.deleteAll();
+        ticketCategoriesRepo.deleteAll();
         eventsRepo.deleteAll();
         usersRepo.deleteAll();
+
     }
 
     @Test
-    public void noRegistrations(){
-        Event event = createEvent();
-        eventsRepo.save(event);
-
-        User user = createUser();
-        usersRepo.save(user);
-
-        assertFalse(client.getUserRegistrations(user.getId()).iterator().hasNext(), "There shouldn't be any user registered events");
-        assertFalse(client.getEventRegistrations(event.getId()).iterator().hasNext(), "There shouldn't be any event registrations");
+    public void invalidIdUserTickets(){
+        assertNull(client.getUserTickets(0L), "Should return null on an invalid user");
     }
 
     @Test
-    public void oneRegistration(){
-        Event event = createEvent();
-        eventsRepo.save(event);
-
+    public void noUserTickets(){
         User user = createUser();
         usersRepo.save(user);
 
-        event.getRegisteredUsers().add(user);
-        user.getRegisteredEvents().add(event);
+        assertTrue(client.getUserTickets(user.getId()).isEmpty(), "User should not have any tickets");
+    }
 
+    @Test
+    public void userTickets(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
         eventsRepo.update(event);
+
+        Ticket ticket = new Ticket();
+        ticket.setUser(user);
+        ticket.setTicketCategory(ticketCategory);
+        ticketsRepo.save(ticket);
+
+        ticketCategory.getSoldTickets().add(ticket);
+        ticketCategoriesRepo.update(ticketCategory);
+
+        user.getTickets().add(ticket);
         usersRepo.update(user);
 
-        List<User> eventUsers = iterableToList(client.getEventRegistrations(event.getId()));
-        assertEquals(eventUsers.size(), 1, "There should only be one user");
-        assertEquals(eventUsers.get(0).getId(), user.getId(), "The user id should be the same");
-
-        List<Event> userEvents = iterableToList(client.getUserRegistrations(user.getId()));
-        assertEquals(userEvents.size(), 1, "There should only be one event");
-        assertEquals(userEvents.get(0).getId(), event.getId(), "The event id should be the same");
+        Set<Ticket> tickets = client.getUserTickets(user.getId());
+        assertEquals(1, tickets.size(), "User should only have one ticket");
+        assertEquals(ticket.getId(), tickets.iterator().next().getId(), "Tickets should match ids");
     }
 
     @Test
-    public void getRegistrationsWithInvalidIds(){
-        assertNull(client.getEventRegistrations(0), "Should return null on an invalid event id");
-        assertNull(client.getUserRegistrations(0), "Should return null on an invalid user id");
+    public void invalidEventTicketCategories(){
+        assertNull(client.getEventTicketCategories(0L), "Should return null on an invalid event");
     }
 
     @Test
-    public void addRegistration(){
+    public void noEventTicketCategories(){
         Event event = createEvent();
         eventsRepo.save(event);
 
-        User user = createUser();
-        usersRepo.save(user);
+        assertTrue(client.getEventTicketCategories(event.getId()).isEmpty(), "Event should have no ticket Categories");
+    }
 
-        HttpResponse<Void> resp = client.addRegistration(event.getId(), user.getId());
-        assertEquals(HttpStatus.OK, resp.getStatus(), "Registering to an event should be successful");
+    @Test
+    public void eventTicketCategories(){
+        Event event = createEvent();
+        eventsRepo.save(event);
 
-        Event repoEvent = eventsRepo.findById(event.getId()).get();
-        assertEquals(1, repoEvent.getRegisteredUsers().size(), "There should be one registered user");
-        assertEquals(user.getId(), repoEvent.getRegisteredUsers().iterator().next().getId(), "The users ids should be the same");
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
 
-        User repoUser = usersRepo.findById(user.getId()).get();
-        assertEquals(1, repoUser.getRegisteredEvents().size(), "There should be one registered event");
-        assertEquals(event.getId(), repoUser.getRegisteredEvents().iterator().next().getId(), "The events ids should be the same");
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        List<TicketCategory> ticketCategories = client.getEventTicketCategories(event.getId());
+        assertEquals(1, ticketCategories.size(), "Event should have only one ticket category");
+        assertEquals(ticketCategory.getId(), ticketCategories.get(0).getId(), "Ticket Category ids should be equal");
     }
 
     @Test
@@ -103,11 +124,13 @@ public class RegistrationControllerTest {
         Event event = createEvent();
         eventsRepo.save(event);
 
-        HttpResponse<Void> resp = client.addRegistration(event.getId(), 0);
-        assertEquals(HttpStatus.NOT_FOUND, resp.getStatus(), "Adding an registration with an invalid user should not be successful");
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
 
-        Event repoEvent = eventsRepo.findById(event.getId()).get();
-        assertFalse(repoEvent.getRegisteredUsers().iterator().hasNext(), "Event should have no registrations");
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        assertNull(client.addRegistration(0L, event.getId(), ticketCategory.getId()), "Should return null on an invalid user");
     }
 
     @Test
@@ -115,35 +138,100 @@ public class RegistrationControllerTest {
         User user = createUser();
         usersRepo.save(user);
 
-        HttpResponse<Void> resp = client.addRegistration(0, user.getId());
-        assertEquals(HttpStatus.NOT_FOUND, resp.getStatus(), "Adding an registration with an invalid event should not be successful");
-
-        User repoUser = usersRepo.findById(user.getId()).get();
-        assertFalse(repoUser.getRegisteredEvents().iterator().hasNext(), "User should not have any registered events");
-    }
-
-    @Test
-    public void deleteEventRegistration(){
         Event event = createEvent();
         eventsRepo.save(event);
 
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        // Used event id 0 (invalid)
+        assertNull(client.addRegistration(user.getId(), 0L, ticketCategory.getId()), "Should return null on an invalid event");
+    }
+
+    @Test
+    public void addRegistrationWithInvalidTicketCategory(){
         User user = createUser();
         usersRepo.save(user);
 
-        event.getRegisteredUsers().add(user);
-        user.getRegisteredEvents().add(event);
+        Event event = createEvent();
+        eventsRepo.save(event);
 
+        assertNull(client.addRegistration(user.getId(), event.getId(), 0), "Should return null on an invalid ticket category");
+    }
+
+    @Test
+    public void addRegistrationWithTicketCategoryNotForEvent(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event1 = createEvent();
+        eventsRepo.save(event1);
+
+        Event event2 = createEvent();
+        eventsRepo.save(event2);
+
+        TicketCategory ticketCategory = createTicketCategory(event1);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event1.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event1);
+
+        assertNull(client.addRegistration(user.getId(), event2.getId(), ticketCategory.getId()), "Should return null on ticket category not for event");
+    }
+
+    @Test
+    public void addRegistrationWithNoAvailableTickets(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
         eventsRepo.update(event);
+
+        Ticket ticket = new Ticket();
+        ticket.setUser(user);
+        ticket.setTicketCategory(ticketCategory);
+        ticketsRepo.save(ticket);
+
+        ticketCategory.getSoldTickets().add(ticket);
+        ticketCategoriesRepo.update(ticketCategory);
+
+        user.getTickets().add(ticket);
         usersRepo.update(user);
 
-        HttpResponse<Void> resp = client.deleteRegistration(event.getId(), user.getId());
-        assertEquals(HttpStatus.OK, resp.getStatus(), "Deleting a event registration should be successful");
+        assertNull(client.addRegistration(user.getId(), event.getId(), ticketCategory.getId()), "Should return null if no tickets are available");
+    }
 
-        Event repoEvent = eventsRepo.findById(event.getId()).get();
-        assertFalse(repoEvent.getRegisteredUsers().iterator().hasNext(), "Event should have no registrations");
+    @Test
+    public void addRegistration(){
+        User user = createUser();
+        usersRepo.save(user);
 
-        User repoUser = usersRepo.findById(user.getId()).get();
-        assertFalse(repoUser.getRegisteredEvents().iterator().hasNext(), "User should not have any registered events");
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        Long reservedTicketId = client.addRegistration(user.getId(), event.getId(), ticketCategory.getId());
+
+        Optional<Ticket> oTicket = ticketsRepo.findById(reservedTicketId);
+        assertTrue(oTicket.isPresent(), "Ticket should be generated");
+
+        List<Ticket> reservedTickets = ticketCategoriesRepo.findById(ticketCategory.getId()).get().getReservedTickets();
+        assertEquals(1, reservedTickets.size(), "Should have one reserved ticket");
+        assertEquals(reservedTicketId, reservedTickets.get(0).getId(), "Should have returned the correct ticket id");
     }
 
     protected static User createUser(){
@@ -152,7 +240,7 @@ public class RegistrationControllerTest {
         user.setFirstName("Doe");
         user.setEmail("test@test.com");
         user.setFollowedOrganizers(new HashSet<>());
-        user.setRegisteredEvents(new HashSet<>());
+        user.setTickets(new HashSet<>());
         return user;
     }
 
@@ -160,11 +248,19 @@ public class RegistrationControllerTest {
         Event event = new Event();
         event.setId(1L);
         event.setEventName("York Parties");
-        event.setVenue("Salvation");
-        event.setDate("27/10/2023");
-        event.setTime("22:00");
-        event.setRegisteredUsers(new HashSet<>());
+        event.setTicketCategories(new ArrayList<>());
         return event;
+    }
+
+    private TicketCategory createTicketCategory(Event event){
+        TicketCategory ticketCategory = new TicketCategory();
+        ticketCategory.setName("Standard");
+        ticketCategory.setPrice(2.0);
+        ticketCategory.setQuantity(1);
+        ticketCategory.setEvent(event);
+        ticketCategory.setReservedTickets(new ArrayList<>());
+        ticketCategory.setSoldTickets(new ArrayList<>());
+        return ticketCategory;
     }
 
     protected static <T> List<T> iterableToList(Iterable<T> iterable) {

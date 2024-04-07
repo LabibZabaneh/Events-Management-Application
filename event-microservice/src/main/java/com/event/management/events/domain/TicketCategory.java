@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class TicketCategory {
 
     private String name;
-    private int initialCount;
+    private int quantity;
     private double price;
 
     public String getName() {
@@ -20,12 +20,12 @@ public class TicketCategory {
         this.name = name;
     }
 
-    public int getInitialCount() {
-        return initialCount;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setInitialCount(int initialCount) {
-        this.initialCount = initialCount;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getPrice() {

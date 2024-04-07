@@ -82,7 +82,13 @@ public class RegistrationsController {
         Event event = oEvent.get();
         TicketCategory ticketCategory = oTicketCategory.get();
 
+        // Check the ticket category is from the event
         if (!ticketCategory.getEvent().equals(event) && event.getTicketCategories().contains(ticketCategory)){
+            return null;
+        }
+
+        // Check for available tickets
+        if (ticketCategory.getQuantity() < ticketCategory.getSoldTickets().size() + ticketCategory.getReservedTickets().size()){
             return null;
         }
 

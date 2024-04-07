@@ -7,13 +7,18 @@ import java.util.List;
 
 @Serdeable
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "event_id"}))
 public class TicketCategory {
 
     @Id
     @GeneratedValue
+    private Long id;
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private double price;
+    @Column
+    private int quantity;
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
@@ -21,6 +26,14 @@ public class TicketCategory {
     private List<Ticket> reservedTickets;
     @OneToMany(mappedBy = "ticketCategory", cascade = CascadeType.ALL)
     private List<Ticket> soldTickets;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -36,6 +49,14 @@ public class TicketCategory {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Event getEvent() {
