@@ -3,7 +3,7 @@ package com.event.management.registrations.dto;
 public class TicketCategoryDTO {
 
     private String name;
-    private int initialCount;
+    private int quantity;
     private double price;
 
     public String getName() {
@@ -14,12 +14,12 @@ public class TicketCategoryDTO {
         this.name = name;
     }
 
-    public int getInitialCount() {
-        return initialCount;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setInitialCount(int initialCount) {
-        this.initialCount = initialCount;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getPrice() {

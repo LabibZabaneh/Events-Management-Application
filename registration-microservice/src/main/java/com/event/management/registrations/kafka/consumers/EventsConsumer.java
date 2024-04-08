@@ -34,21 +34,23 @@ public class EventsConsumer {
             Event event = new Event();
             event.setId(id);
             event.setEventName(dto.getEventName());
+            event.setTicketCategories(new ArrayList<>());
+            eventsRepo.save(event);
 
-            List<TicketCategory> ticketCategories = new ArrayList<>();
             for (TicketCategoryDTO ticketCategoryDTO : dto.getTicketCategories()){
                 TicketCategory ticketCategory = new TicketCategory();
                 ticketCategory.setName(ticketCategoryDTO.getName());
                 ticketCategory.setEvent(event);
+                ticketCategory.setQuantity(ticketCategoryDTO.getQuantity());
                 ticketCategory.setPrice(ticketCategoryDTO.getPrice());
                 ticketCategory.setReservedTickets(new ArrayList<>());
                 ticketCategory.setSoldTickets(new ArrayList<>());
 
                 ticketCategoriesRepo.save(ticketCategory);
-                ticketCategories.add(ticketCategory);
+                event.getTicketCategories().add(ticketCategory);
             }
-            event.setTicketCategories(ticketCategories);
-            eventsRepo.save(event);
+
+            eventsRepo.update(event);
 
             System.out.println("Event added with id" + id);
         }

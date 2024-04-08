@@ -17,7 +17,7 @@ public class Event {
     @Column(nullable = false)
     private String eventName;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TicketCategory> ticketCategories;
 
     public Long getId() {

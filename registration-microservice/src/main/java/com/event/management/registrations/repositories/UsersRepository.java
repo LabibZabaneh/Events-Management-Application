@@ -11,8 +11,4 @@ import java.util.Optional;
 @Repository
 public interface UsersRepository extends CrudRepository<User, Long> {
 
-    @Join(value = "registeredEvents", type = Join.Type.LEFT_FETCH)
-    @Override
-    Optional<User> findById(@NotNull Long id);
-
 }

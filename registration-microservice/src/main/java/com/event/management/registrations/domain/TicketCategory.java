@@ -1,5 +1,6 @@
 package com.event.management.registrations.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 
 import javax.persistence.*;
@@ -19,11 +20,14 @@ public class TicketCategory {
     private double price;
     @Column
     private int quantity;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketCategory", cascade = CascadeType.ALL)
     private List<Ticket> reservedTickets;
+    @JsonIgnore
     @OneToMany(mappedBy = "ticketCategory", cascade = CascadeType.ALL)
     private List<Ticket> soldTickets;
 
