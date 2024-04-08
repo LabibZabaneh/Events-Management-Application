@@ -227,11 +227,128 @@ public class RegistrationControllerTest {
         Long reservedTicketId = client.addRegistration(user.getId(), event.getId(), ticketCategory.getId());
 
         Optional<Ticket> oTicket = ticketsRepo.findById(reservedTicketId);
-        assertTrue(oTicket.isPresent(), "Ticket should be generated");
+        assertTrue(oTicket.isPresent(), "Ticket should be generated");;
 
         List<Ticket> reservedTickets = ticketCategoriesRepo.findById(ticketCategory.getId()).get().getReservedTickets();
-        assertEquals(1, reservedTickets.size(), "Should have one reserved ticket");
-        assertEquals(reservedTicketId, reservedTickets.get(0).getId(), "Should have returned the correct ticket id");
+        assertEquals(1, reservedTickets.size(), "Ticket category should have one reserved ticket");
+        assertEquals(reservedTicketId, reservedTickets.get(0).getId(), "Ticket should have the correct ticket id");
+
+    }
+
+    @Test
+    public void deleteRegistrationWithInvalidUser(){
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        assertEquals(HttpStatus.NOT_FOUND, client.deleteRegistration(event.getId(), 0L, ticketCategory.getId()).getStatus(), "Should return http status not found on an invalid user");
+    }
+
+    @Test
+    public void deleteRegistrationWithInvalidEvent(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        // Used event id 0 (invalid)
+        assertEquals(HttpStatus.NOT_FOUND, client.deleteRegistration(0L, user.getId(), ticketCategory.getId()).getStatus(), "Should return http status not found on an invalid event");
+    }
+
+    @Test
+    public void deleteRegistrationWithInvalidTicketCategory(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        assertEquals(HttpStatus.NOT_FOUND, client.deleteRegistration(event.getId(), user.getId(), 0L).getStatus(), "Should return http status not found on an invalid ticket category");
+    }
+
+    @Test
+    public void deleteRegistrationWithTicketNotForEvent(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event1 = createEvent();
+        eventsRepo.save(event1);
+
+        Event event2 = createEvent();
+        eventsRepo.save(event2);
+
+        TicketCategory ticketCategory = createTicketCategory(event1);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event1.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event1);
+
+        // Used event2
+        assertEquals(HttpStatus.BAD_REQUEST, client.deleteRegistration(event2.getId(), user.getId(), ticketCategory.getId()).getStatus(), "Should return http status bad request for a ticket category not for event");
+    }
+
+    @Test
+    public void deleteRegistrationWithInvalidTicket(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        assertEquals(HttpStatus.NOT_FOUND, client.deleteRegistration(event.getId(), user.getId(), ticketCategory.getId()).getStatus(), "Should return http response not found for an invalid ticket");
+    }
+
+    @Test
+    public void deleteRegistration(){
+        User user = createUser();
+        usersRepo.save(user);
+
+        Event event = createEvent();
+        eventsRepo.save(event);
+
+        TicketCategory ticketCategory = createTicketCategory(event);
+        ticketCategoriesRepo.save(ticketCategory);
+
+        event.getTicketCategories().add(ticketCategory);
+        eventsRepo.update(event);
+
+        Ticket ticket = new Ticket();
+        ticket.setUser(user);
+        ticket.setTicketCategory(ticketCategory);
+        ticketsRepo.save(ticket);
+
+        ticketCategory.getSoldTickets().add(ticket);
+        ticketCategoriesRepo.update(ticketCategory);
+
+        user.getTickets().add(ticket);
+        usersRepo.update(user);
+
+        HttpResponse<String> response = client.deleteRegistration(event.getId(), user.getId(), ticketCategory.getId());
+        assertEquals(HttpStatus.OK, response.getStatus(), "Should return http status ok");
+
+        Set<Ticket> repoUserTickets = usersRepo.findById(user.getId()).get().getTickets();
+        assertTrue(repoUserTickets.isEmpty(), "User should not have any tickets");
+
+        List<Ticket> repoTicketCategoryTickets = ticketCategoriesRepo.findById(ticketCategory.getId()).get().getSoldTickets();
+        assertTrue(repoTicketCategoryTickets.isEmpty(), "Ticket category should not have any sold tickets");
     }
 
     protected static User createUser(){
