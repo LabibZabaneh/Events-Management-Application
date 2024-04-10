@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Events Management application is designed to facilitate the creation, management, and analysis of events. The backend application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance. The application is fully hosted on Docker containers.
+This Events Management application is designed to facilitate the creation, management, and analysis of events. The backend application follows a microservices architecture, allowing for scalability, modularity, and ease of maintenance. The application is fully hosted on Docker containers
 
 ## Technologies Used
 
@@ -10,31 +10,27 @@ This Events Management application is designed to facilitate the creation, manag
 - **Messaging System:** [Apache Kafka](https://kafka.apache.org/)
 - **Containerization:** [Docker](https://www.docker.com/)
 - **Database:** [MariaDB](https://mariadb.org/)
-- **Stripe:** [Stripe](https://stripe.com/)
+- **Payment Gateway:** [Stripe](https://stripe.com/)
 
 ## Microservices
 
 1. **Event Microservice:**
-   - Handles CRUD operations for users, events, and organizers.
+   - Handles CRUD operations for users, events, and organizers
 
 2. **Registration Microservice:**
-   - Handles user registration to events.
+   - Handles user registration to events
    - Enables users to follow organizers
-   - Generates tickets upon registration.
+   - Generates tickets upon registration
 
 3. **Analytics Microservice:**
-   - Provides insights into trending events and analytics.
+   - Provides insights into trending events and analytics
 
 4. **Payment Microservice:**
-   - Facilitates users buying tickets for events through Stripe.
-   - (Under implementation)
+   - Facilitates users buying tickets for events through Stripe's API
 
-5. **Recommendation Microservice:**
-   - Provides personalized event recommendations to users.
-   - (To be implemented)
-
-6. **Rating and Review Microservice:**
-   - Manages ratings and reviews from users for events.
+5. **Notification Microservice:**
+   - Sends conformation via email to users to activate their accounts
+   - Sends tickets to users via email upon successful registration for an event
    - (To be implemented)
   
 ## Getting Started
@@ -48,11 +44,12 @@ This Events Management application is designed to facilitate the creation, manag
 1. Clone the repository: `git clone https://github.com/LabibZabaneh/Events-Management-Application.git`
 2. Navigate to the directory: `cd Events-Management-Application`
 3. Run the application using Docker Compose: `docker-compose up -d`
-4. Access the event-microservice at: [http://localhost:8080](http://localhost:8080) (must manually run the microservice)
-5. Access the registration-microservice at: [http://localhost:8081](http://localhost:8081) (must manually run the microservice)
+4. Access the registration-microservice at: [http://localhost:8081](http://localhost:8081) (must manually run the microservice)
+5. Access the event-microservice at: [http://localhost:8080](http://localhost:8080) (must manually run the microservice)
 6. Access the analytics-microservice at: [http://localhost:8082](http://localhost:8082) (must manually run the microservice)
 
 ## Acknowledgments
 
-- The event-microservice, registration-microservice and analytics-microservice are currently implemented; however, other microservices are yet to be built.
-- There is no user interface yet; the development of the frontend will start after the full completion of the backend.
+- There is no user interface yet; the development of the frontend will start after the full completion of the backend
+- Run the registration-microservice before running the event-microservice, there is a minor bug in the automatic generation of kafka topics in the event-microservice
+- I am working on a fix for that bug
