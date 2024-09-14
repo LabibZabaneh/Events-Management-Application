@@ -13,7 +13,6 @@ public class UserDTO {
     private String email;
     private LocalDate dateOfBirth;
     private String mobileNumber;
-
     private Gender gender;
 
     public String getFirstName() {

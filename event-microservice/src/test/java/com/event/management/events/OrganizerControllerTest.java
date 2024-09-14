@@ -3,6 +3,7 @@ package com.event.management.events;
 import com.event.management.events.clients.OrganizerClient;
 import com.event.management.events.domain.Organizer;
 import com.event.management.events.dto.OrganizerDTO;
+import com.event.management.events.repositories.EventsRepository;
 import com.event.management.events.repositories.OrganizersRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -27,8 +28,12 @@ public class OrganizerControllerTest {
     @Inject
     OrganizersRepository repo;
 
+    @Inject
+    EventsRepository eventsRepo;
+
     @BeforeEach
     public void clean(){
+        eventsRepo.deleteAll();
         repo.deleteAll();
     }
 
